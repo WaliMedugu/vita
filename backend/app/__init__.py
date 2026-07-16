@@ -1,0 +1,1 @@
+# VITA FastAPI application package

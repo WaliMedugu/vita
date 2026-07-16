@@ -1,0 +1,2409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VITA — UI System v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── DESIGN TOKENS ─────────────────────────────────── */
+:root {
+  --g:  #1A6B4A;
+  --t:  #18A574;
+  --l:  #E8F5EE;
+  --go: #D4A017;
+  --d:  #1A1A2E;
+  --gr: #6B7280;
+  --r:  #C0392B;
+  --w:  #FAFAF8;
+  --ink:#0D0D0D;
+
+  --f-head: 'Clash Display', sans-serif;
+  --f-body: 'Cabinet Grotesk', sans-serif;
+  --f-serif: 'Instrument Serif', serif;
+  --f-mono: 'DM Mono', monospace;
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── RESET ─────────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family: var(--f-body);
+  background: #EBEBEA;
+  color: var(--ink);
+  min-height:100vh;
+}
+
+/* ─── LAYOUT SHELL ──────────────────────────────────── */
+#shell{ display:flex; min-height:100vh; }
+
+/* ─── SIDEBAR ───────────────────────────────────────── */
+#nav{
+  width:200px; flex-shrink:0;
+  background: var(--d);
+  position:fixed; top:0; left:0; bottom:0;
+  display:flex; flex-direction:column;
+  padding:0 0 20px;
+  overflow-y:auto;
+  z-index:200;
+}
+.nav-logo{
+  padding:24px 20px 20px;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex; align-items:center; gap:10px;
+}
+.logo-mark{
+  width:32px; height:32px;
+  background: var(--g);
+  border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--f-head);
+  font-size:17px; font-weight:700; color:#fff;
+}
+.logo-word{
+  font-family:var(--f-head);
+  font-size:20px; font-weight:700; color:#fff;
+  letter-spacing:-0.5px;
+}
+.nav-group{
+  padding:18px 20px 6px;
+  font-family:var(--f-mono);
+  font-size:9.5px; text-transform:uppercase;
+  letter-spacing:1.8px;
+  color:rgba(255,255,255,0.25);
+}
+.ni{
+  display:flex; align-items:center; gap:9px;
+  padding:8px 20px;
+  font-size:13px; font-weight:500;
+  color:rgba(255,255,255,0.45);
+  cursor:pointer;
+  border-left:2px solid transparent;
+  transition:all .15s;
+  white-space:nowrap;
+}
+.ni:hover{color:rgba(255,255,255,0.85); background:rgba(255,255,255,0.04);}
+.ni.on{
+  color:#fff;
+  background:rgba(24,165,116,0.14);
+  border-left-color:var(--t);
+  font-weight:600;
+}
+.ni-ic{font-size:15px;width:18px;text-align:center}
+.ni-pill{
+  margin-left:auto;
+  font-family:var(--f-mono);
+  font-size:9px; font-weight:500;
+  padding:2px 7px;
+  border-radius:20px;
+}
+.np-g{background:rgba(24,165,116,0.2);color:#5ef5b8;}
+.np-r{background:rgba(192,57,43,0.2);color:#ff8070;}
+.np-o{background:rgba(212,160,23,0.2);color:#f5d060;}
+.nav-foot{
+  margin-top:auto;
+  padding:16px 20px;
+  border-top:1px solid rgba(255,255,255,0.07);
+  display:flex; align-items:center; gap:10px;
+}
+.nav-av{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--t);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;
+  flex-shrink:0;
+}
+.nav-name{font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nav-role{font-size:10.5px;color:rgba(255,255,255,0.3);}
+
+/* ─── MAIN ──────────────────────────────────────────── */
+#main{margin-left:200px;flex:1;}
+
+/* ─── SCREENS ───────────────────────────────────────── */
+.scr{display:none}
+.scr.on{display:block}
+
+/* ─── SECTION HEADER ────────────────────────────────── */
+.sh{
+  background:#fff;
+  border-bottom:1px solid rgba(0,0,0,0.07);
+  padding:18px 32px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.sh-title{
+  font-family:var(--f-head);
+  font-size:18px;font-weight:700;
+  letter-spacing:-0.4px;
+}
+.sh-sub{font-size:12px;color:var(--gr);margin-top:2px;}
+.sh-tag{
+  font-family:var(--f-mono);
+  font-size:10px;
+  padding:4px 10px;
+  border-radius:20px;
+  background:var(--l);
+  color:var(--g);
+  font-weight:500;
+}
+
+/* ─── CANVAS ────────────────────────────────────────── */
+.canvas{
+  padding:40px 32px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:48px;
+  align-items:flex-start;
+}
+
+/* ─── PHONE FRAME ───────────────────────────────────── */
+.phone{
+  width:360px;
+  border-radius:48px;
+  background:#111;
+  box-shadow:
+    0 40px 100px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(255,255,255,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+  overflow:hidden;
+  flex-shrink:0;
+}
+.notch{
+  height:36px;
+  background:#111;
+  display:flex;align-items:center;justify-content:center;
+}
+.notch-bar{
+  width:96px;height:18px;
+  background:#000;
+  border-radius:20px;
+}
+.ps{
+  overflow-y:auto;
+  background:var(--w);
+  max-height:720px;
+  scrollbar-width:none;
+}
+.ps::-webkit-scrollbar{display:none}
+.cap{
+  text-align:center;
+  margin-top:12px;
+  font-family:var(--f-mono);
+  font-size:10px;text-transform:uppercase;
+  letter-spacing:1.2px;
+  color:var(--gr);
+}
+
+/* ─── WEB FRAME ─────────────────────────────────────── */
+.webframe{
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 20px 80px rgba(0,0,0,0.18);
+  flex:1;min-width:0;
+  border:1px solid rgba(0,0,0,0.08);
+}
+.wbar{
+  background:#F0F0EF;
+  padding:10px 14px;
+  display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid rgba(0,0,0,0.08);
+}
+.wdots{display:flex;gap:6px}
+.wd{width:12px;height:12px;border-radius:50%}
+.wd.r{background:#FF5F57}.wd.y{background:#FFBD2E}.wd.g{background:#28C840}
+.wurl{
+  flex:1;
+  background:#fff;
+  border-radius:7px;
+  padding:4px 12px;
+  font-family:var(--f-mono);
+  font-size:10.5px;
+  color:#666;
+  border:1px solid rgba(0,0,0,0.1);
+}
+
+/* ═══════════════════════════════════════════════════════
+   ONBOARDING SCREENS
+═══════════════════════════════════════════════════════ */
+.ob{
+  min-height:720px;
+  background:var(--g);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.ob-bg-num{
+  position:absolute;
+  font-family:var(--f-head);
+  font-size:320px;font-weight:700;
+  color:rgba(255,255,255,0.04);
+  line-height:1;
+  bottom:-60px;right:-40px;
+  pointer-events:none;
+  letter-spacing:-20px;
+}
+.ob-tag{
+  margin:28px 24px 0;
+  display:inline-flex;
+  align-items:center;gap:6px;
+  background:rgba(255,255,255,0.12);
+  border-radius:20px;
+  padding:5px 12px;
+  width:fit-content;
+  font-size:11px;font-weight:600;color:rgba(255,255,255,0.8);
+  font-family:var(--f-mono);
+  text-transform:uppercase;letter-spacing:1px;
+}
+.ob-hero{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 24px 0;}
+.ob-word-big{
+  font-family:var(--f-head);
+  font-size:58px;font-weight:700;
+  color:#fff;line-height:0.9;
+  letter-spacing:-2px;
+  margin-bottom:4px;
+}
+.ob-word-ital{
+  font-family:var(--f-serif);
+  font-style:italic;
+  font-size:54px;
+  color:rgba(255,255,255,0.7);
+  line-height:1;
+  letter-spacing:-1px;
+  margin-bottom:20px;
+}
+.ob-body{
+  font-size:14px;color:rgba(255,255,255,0.6);
+  line-height:1.65;margin-bottom:32px;
+  max-width:280px;
+}
+.ob-progress{
+  display:flex;gap:5px;margin-bottom:24px;
+}
+.ob-p-seg{height:2px;border-radius:2px;background:rgba(255,255,255,0.2);flex:1;}
+.ob-p-seg.on{background:#fff;}
+.ob-foot{
+  background:rgba(0,0,0,0.2);
+  backdrop-filter:blur(20px);
+  padding:20px 24px 28px;
+}
+.ob-btn{
+  width:100%;
+  background:#fff;
+  color:var(--d);
+  border:none;
+  padding:16px;
+  border-radius:14px;
+  font-family:var(--f-head);
+  font-size:16px;font-weight:700;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  letter-spacing:-0.3px;
+}
+.ob-btn-arrow{
+  width:28px;height:28px;
+  background:var(--g);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+}
+.ob-skip{
+  text-align:center;
+  margin-top:14px;
+  font-size:12.5px;color:rgba(255,255,255,0.45);
+  cursor:pointer;
+}
+.ob-skip span{color:rgba(255,255,255,0.75);font-weight:600;}
+.ob-float{
+  position:absolute;
+  top:50px;right:20px;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:16px;
+  padding:12px 14px;
+  width:130px;
+}
+.ob-float-label{font-size:10px;color:rgba(255,255,255,0.5);font-family:var(--f-mono);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;}
+.ob-float-val{font-family:var(--f-head);font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.5px;}
+.ob-float-sub{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;}
+
+/* ═══════════════════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════════════════ */
+.auth{background:var(--w);min-height:720px;}
+.auth-hero{
+  height:220px;
+  background:var(--d);
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 24px 24px;
+}
+.auth-bg-text{
+  position:absolute;
+  font-family:var(--f-head);
+  font-size:180px;font-weight:700;
+  color:rgba(255,255,255,0.05);
+  top:-20px;left:-10px;
+  letter-spacing:-8px;
+  pointer-events:none;
+  white-space:nowrap;
+}
+.auth-title{
+  font-family:var(--f-head);
+  font-size:34px;font-weight:700;
+  color:#fff;letter-spacing:-1px;
+  position:relative;z-index:1;
+}
+.auth-title em{
+  font-family:var(--f-serif);
+  font-style:italic;
+  color:rgba(255,255,255,0.55);
+  font-size:30px;
+}
+.auth-tabs{
+  display:flex;gap:0;
+  margin:24px 24px 0;
+  background:rgba(0,0,0,0.05);
+  border-radius:12px;
+  padding:4px;
+}
+.at{
+  flex:1;text-align:center;
+  padding:10px;border-radius:9px;
+  font-size:13.5px;font-weight:600;
+  cursor:pointer;color:var(--gr);
+  transition:all .2s;
+}
+.at.on{
+  background:#fff;
+  color:var(--d);
+  box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+.auth-form{padding:20px 24px 32px;}
+.fl{margin-bottom:14px;}
+.fl-label{
+  font-size:11.5px;font-weight:600;
+  color:var(--d);margin-bottom:5px;
+  font-family:var(--f-mono);
+  text-transform:uppercase;letter-spacing:0.8px;
+  display:block;
+}
+.fi{
+  width:100%;
+  background:#F2F2F0;
+  border:1.5px solid transparent;
+  border-radius:12px;
+  padding:13px 14px;
+  font-size:14px;font-weight:500;
+  color:var(--d);
+  font-family:var(--f-body);
+  outline:none;
+  transition:all .18s;
+}
+.fi:focus{border-color:var(--t);background:#fff;}
+.fi::placeholder{color:#B0B0AE;font-weight:400;}
+select.fi{appearance:none;cursor:pointer;}
+.btn-g{
+  width:100%;
+  background:var(--g);
+  color:#fff;border:none;
+  padding:15px;border-radius:14px;
+  font-family:var(--f-head);
+  font-size:16px;font-weight:700;
+  cursor:pointer;letter-spacing:-0.3px;
+  margin-top:6px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all .18s;
+}
+.btn-g:hover{background:#155a3d;transform:translateY(-1px);}
+.btn-r{background:var(--r);box-shadow:0 6px 24px rgba(192,57,43,0.3);}
+.btn-r:hover{background:#a93226;}
+.auth-link{
+  text-align:center;margin-top:18px;
+  font-size:13px;color:var(--gr);
+}
+.auth-link a{color:var(--g);font-weight:700;cursor:pointer;}
+
+/* ═══════════════════════════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════════════════════════ */
+.dash{background:var(--w)}
+.dash-top{
+  background:var(--d);
+  padding:24px 24px 0;
+  position:relative;overflow:hidden;
+}
+.dt-bg{
+  position:absolute;
+  font-family:var(--f-head);
+  font-size:140px;font-weight:700;
+  color:rgba(255,255,255,0.04);
+  bottom:-20px;right:-10px;
+  letter-spacing:-6px;
+  pointer-events:none;
+}
+.dt-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+.dt-greet{font-size:12.5px;color:rgba(255,255,255,0.4);font-family:var(--f-mono);}
+.dt-icons{display:flex;gap:10px;}
+.dt-ic{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;
+}
+.pool-card{
+  background:var(--g);
+  border-radius:22px 22px 0 0;
+  padding:22px 22px 28px;
+  position:relative;overflow:hidden;
+}
+.pool-card::before{
+  content:'';
+  position:absolute;
+  width:200px;height:200px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.05);
+  top:-80px;right:-60px;
+}
+.pool-card::after{
+  content:'';
+  position:absolute;
+  width:100px;height:100px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.04);
+  bottom:-30px;left:20px;
+}
+.pc-eyebrow{
+  font-family:var(--f-mono);
+  font-size:10px;text-transform:uppercase;
+  letter-spacing:1.5px;color:rgba(255,255,255,0.5);
+  margin-bottom:6px;
+}
+.pc-amount{
+  font-family:var(--f-head);
+  font-size:44px;font-weight:700;
+  color:#fff;letter-spacing:-2px;
+  line-height:1;
+  margin-bottom:10px;
+  position:relative;z-index:1;
+}
+.pc-amount sup{font-size:22px;vertical-align:super;letter-spacing:0;}
+.pc-meta{
+  display:flex;align-items:center;gap:8px;
+  position:relative;z-index:1;
+}
+.mode-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,0.12);
+  border-radius:20px;
+  padding:4px 10px;
+  font-size:11.5px;font-weight:600;color:#fff;
+}
+.mode-dot{width:6px;height:6px;border-radius:50%;}
+.mode-dot.active{background:#6FFFC2;}
+.mode-dot.sched{background:var(--go);}
+.floor-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(0,0,0,0.2);
+  border-radius:20px;
+  padding:4px 10px;
+  font-size:10.5px;color:rgba(255,255,255,0.55);
+  font-family:var(--f-mono);
+}
+
+.dash-body{padding:20px 24px;}
+.db-section{
+  font-family:var(--f-mono);
+  font-size:10px;text-transform:uppercase;
+  letter-spacing:1.5px;color:var(--gr);
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.db-section::after{content:'';flex:1;height:1px;background:rgba(0,0,0,0.06);}
+.db-live{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--t);
+  box-shadow:0 0 0 3px rgba(24,165,116,0.2);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px rgba(24,165,116,0.2);}50%{box-shadow:0 0 0 6px rgba(24,165,116,0);}}
+
+.qg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
+.qa{
+  background:#fff;
+  border-radius:16px;
+  padding:16px 14px;
+  border:1px solid rgba(0,0,0,0.06);
+  cursor:pointer;
+  transition:all .18s;
+  position:relative;overflow:hidden;
+}
+.qa::after{
+  content:'→';
+  position:absolute;bottom:12px;right:14px;
+  font-size:16px;color:rgba(0,0,0,0.15);
+}
+.qa:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.08);}
+.qa-em{font-size:26px;margin-bottom:10px;}
+.qa-t{font-size:13.5px;font-weight:700;color:var(--d);letter-spacing:-0.2px;}
+.qa-s{font-size:11px;color:var(--gr);margin-top:2px;}
+
+.txn{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(0,0,0,0.05);}
+.txn:last-child{border:none}
+.txn-av{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--l);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;color:var(--g);
+  flex-shrink:0;
+}
+.txn-n{font-size:13.5px;font-weight:600;color:var(--d);}
+.txn-ref{font-size:10.5px;color:var(--gr);font-family:var(--f-mono);margin-top:2px;}
+.txn-r{margin-left:auto;text-align:right;}
+.txn-amt{font-family:var(--f-head);font-size:15px;font-weight:700;color:var(--t);}
+.txn-t{font-size:10.5px;color:var(--gr);margin-top:2px;}
+
+.emg-wrap{padding:0 0 24px;}
+.emg-btn{
+  width:100%;
+  background:var(--r);
+  border:none;border-radius:20px;
+  padding:0;cursor:pointer;
+  position:relative;overflow:hidden;
+  box-shadow:0 8px 32px rgba(192,57,43,0.35);
+  transition:all .2s;
+}
+.emg-btn:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(192,57,43,0.45);}
+.emg-inner{
+  display:flex;align-items:center;
+  padding:18px 22px;gap:14px;
+}
+.emg-icon-wrap{
+  width:50px;height:50px;border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;
+}
+.emg-text{text-align:left;}
+.emg-label{
+  font-family:var(--f-head);
+  font-size:20px;font-weight:700;
+  color:#fff;letter-spacing:-0.5px;
+}
+.emg-sub{font-size:11.5px;color:rgba(255,255,255,0.65);margin-top:2px;}
+.emg-arrow{
+  margin-left:auto;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(0,0,0,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:#fff;
+}
+.emg-pulse{
+  position:absolute;inset:0;border-radius:20px;
+  background:rgba(255,255,255,0.06);
+  animation:emg-p 2.5s ease-in-out infinite;
+}
+@keyframes emg-p{0%,100%{opacity:0}50%{opacity:1}}
+
+.bnav{
+  display:flex;
+  background:#fff;
+  border-top:1px solid rgba(0,0,0,0.07);
+  padding:10px 0 8px;
+  position:sticky;bottom:0;
+}
+.bn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;font-size:9.5px;font-weight:600;
+  color:var(--gr);
+  font-family:var(--f-mono);text-transform:uppercase;letter-spacing:0.5px;
+}
+.bn.on{color:var(--g);}
+.bn em{font-size:19px;font-style:normal;}
+
+/* ═══════════════════════════════════════════════════════
+   HEALTH PROFILE
+═══════════════════════════════════════════════════════ */
+.hp{background:var(--w);min-height:720px;}
+.hp-head{
+  background:var(--d);
+  padding:32px 24px 40px;
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.hp-bg{
+  position:absolute;
+  font-family:var(--f-head);
+  font-size:200px;font-weight:700;
+  color:rgba(255,255,255,0.03);
+  top:-30px;left:50%;transform:translateX(-50%);
+  letter-spacing:-10px;
+  white-space:nowrap;
+}
+.hp-av{
+  width:76px;height:76px;border-radius:50%;
+  background:var(--g);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--f-head);font-size:26px;font-weight:700;color:#fff;
+  margin:0 auto 14px;
+  border:3px solid rgba(255,255,255,0.15);
+  position:relative;z-index:1;
+}
+.hp-name{
+  font-family:var(--f-head);font-size:22px;font-weight:700;
+  color:#fff;letter-spacing:-0.5px;
+  position:relative;z-index:1;
+}
+.hp-email{font-size:12.5px;color:rgba(255,255,255,0.45);margin-top:3px;font-family:var(--f-mono);}
+.hp-body{padding:0 20px 24px;margin-top:-16px;}
+.hcard{
+  background:#fff;border-radius:20px;
+  padding:20px;margin-bottom:14px;
+  border:1px solid rgba(0,0,0,0.06);
+  box-shadow:0 2px 16px rgba(0,0,0,0.05);
+}
+.hcard-title{
+  font-family:var(--f-head);font-size:14px;font-weight:700;
+  color:var(--d);margin-bottom:14px;letter-spacing:-0.3px;
+  display:flex;align-items:center;gap:8px;
+}
+.hr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);}
+.hr:last-child{border:none}
+.hr-k{font-size:11.5px;color:var(--gr);font-weight:500;}
+.hr-v{font-size:13.5px;font-weight:700;color:var(--d);}
+.blood{
+  font-family:var(--f-head);font-size:16px;font-weight:700;
+  background:#FEF0EF;color:var(--r);
+  padding:4px 12px;border-radius:8px;
+}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.tag{
+  padding:5px 12px;border-radius:20px;
+  font-size:12px;font-weight:600;
+  background:var(--l);color:var(--g);
+  border:1px solid rgba(24,165,116,0.2);
+}
+.tag.danger{
+  background:#FEF0EF;color:var(--r);
+  border-color:rgba(192,57,43,0.2);
+}
+.pool-link{
+  background:var(--l);border-radius:14px;
+  padding:14px;display:flex;align-items:center;gap:12px;
+  border:1px solid rgba(24,165,116,0.2);
+}
+.pl-icon{font-size:28px;}
+.pl-id{font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--g);}
+.pl-name{font-size:12px;color:var(--gr);margin-top:2px;}
+
+/* ═══════════════════════════════════════════════════════
+   NFC SCREENS
+═══════════════════════════════════════════════════════ */
+.nfc-screen{
+  min-height:720px;
+  background:var(--d);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.nfc-bg-rings{
+  position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.ring{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(24,165,116,0.12);
+  transform:translate(-50%,-50%);
+  top:50%;left:50%;
+}
+.nfc-head{
+  padding:24px;
+  display:flex;align-items:center;gap:12px;
+  position:relative;z-index:1;
+}
+.back-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,0.07);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:rgba(255,255,255,0.6);cursor:pointer;
+}
+.nfc-head-title{font-family:var(--f-head);font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.3px;}
+.nfc-badge{
+  margin-left:auto;
+  font-family:var(--f-mono);font-size:9px;
+  text-transform:uppercase;letter-spacing:1px;
+  background:rgba(24,165,116,0.2);color:#6FFFC2;
+  padding:4px 10px;border-radius:20px;
+}
+.nfc-center{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 24px;position:relative;z-index:1;
+}
+.tap-circle{
+  width:160px;height:160px;border-radius:50%;
+  background:rgba(24,165,116,0.08);
+  border:1.5px dashed rgba(24,165,116,0.3);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:28px;
+  position:relative;
+}
+.tap-inner{
+  width:110px;height:110px;border-radius:50%;
+  background:rgba(24,165,116,0.12);
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;
+  animation:tap-bounce 2.5s ease-in-out infinite;
+}
+@keyframes tap-bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.tap-orbit{
+  position:absolute;width:100%;height:100%;
+  border:1.5px dashed rgba(24,165,116,0.15);
+  border-radius:50%;
+  animation:orbit-spin 8s linear infinite;
+}
+@keyframes orbit-spin{100%{transform:rotate(360deg)}}
+.nfc-t{
+  font-family:var(--f-head);font-size:28px;font-weight:700;
+  color:#fff;text-align:center;letter-spacing:-0.8px;
+  margin-bottom:10px;
+}
+.nfc-s{font-size:13.5px;color:rgba(255,255,255,0.45);text-align:center;line-height:1.6;max-width:260px;}
+.nfc-data{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  padding:16px;width:100%;
+  margin-top:24px;
+}
+.nd-row{
+  display:flex;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);
+  font-size:12.5px;
+}
+.nd-row:last-child{border:none}
+.nd-k{color:rgba(255,255,255,0.35);font-family:var(--f-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:0.8px;}
+.nd-v{color:#fff;font-weight:500;}
+.nfc-foot{padding:20px 24px 28px;position:relative;z-index:1;}
+.btn-t{
+  width:100%;background:var(--t);color:#fff;border:none;
+  padding:15px;border-radius:14px;
+  font-family:var(--f-head);font-size:16px;font-weight:700;
+  cursor:pointer;letter-spacing:-0.3px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+
+/* ─── NFC READ RESULT ── */
+.nr{background:var(--w);min-height:720px;}
+.nr-head{background:var(--d);padding:18px 24px 28px;}
+.nr-hrow{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.nr-name{font-family:var(--f-head);font-size:28px;font-weight:700;color:#fff;letter-spacing:-1px;}
+.nr-id{font-size:11px;color:rgba(255,255,255,0.35);font-family:var(--f-mono);margin-top:3px;}
+.nr-bt{
+  font-family:var(--f-head);font-size:20px;font-weight:700;
+  background:rgba(192,57,43,0.2);color:#FF8070;
+  padding:6px 14px;border-radius:10px;
+  margin-left:auto;flex-shrink:0;
+}
+.nr-body{padding:20px;}
+.fa-card{
+  background:var(--l);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:14px;
+  border-left:4px solid var(--t);
+}
+.fa-title{
+  display:flex;align-items:center;gap:8px;
+  font-weight:700;color:var(--g);
+  font-size:13.5px;margin-bottom:12px;
+}
+.fa-step{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:8px 0;border-bottom:1px solid rgba(24,165,116,0.12);
+}
+.fa-step:last-child{border:none}
+.fa-num{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--g);color:#fff;
+  font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+  font-family:var(--f-mono);
+}
+.fa-text{font-size:13px;color:var(--d);line-height:1.5;}
+.fa-warn{
+  background:rgba(212,160,23,0.1);
+  border:1px solid rgba(212,160,23,0.25);
+  border-radius:12px;padding:11px 13px;
+  font-size:11.5px;color:#8a6700;
+  display:flex;gap:8px;align-items:flex-start;
+  margin-top:12px;
+  line-height:1.5;
+}
+.nr-actions{display:flex;gap:10px;padding:0 20px 24px;}
+.btn-outline{
+  flex:1;background:transparent;
+  border:1.5px solid rgba(0,0,0,0.12);
+  color:var(--d);padding:14px;border-radius:14px;
+  font-family:var(--f-head);font-size:14px;font-weight:700;
+  cursor:pointer;
+}
+
+/* ═══════════════════════════════════════════════════════
+   EMERGENCY CONFIRM
+═══════════════════════════════════════════════════════ */
+.ec{background:var(--w);min-height:720px;}
+.ec-top{
+  background:var(--r);
+  padding:36px 24px 48px;
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.ec-bg{
+  position:absolute;
+  font-family:var(--f-head);
+  font-size:300px;font-weight:700;
+  color:rgba(0,0,0,0.1);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  letter-spacing:-15px;
+  pointer-events:none;
+}
+.ec-em{font-size:52px;margin-bottom:12px;position:relative;z-index:1;}
+.ec-t{
+  font-family:var(--f-head);font-size:28px;font-weight:700;
+  color:#fff;letter-spacing:-0.8px;
+  position:relative;z-index:1;
+}
+.ec-s{font-size:13px;color:rgba(255,255,255,0.65);margin-top:6px;position:relative;z-index:1;}
+.ec-body{padding:0 20px 24px;margin-top:-20px;}
+.ec-card{
+  background:#fff;border-radius:22px;
+  padding:20px;
+  box-shadow:0 12px 48px rgba(0,0,0,0.1);
+  border:1px solid rgba(0,0,0,0.06);
+  margin-bottom:20px;
+}
+.ec-row{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.05);}
+.ec-row:last-child{border:none}
+.ec-ic{font-size:20px;width:26px;text-align:center;flex-shrink:0;}
+.ec-k{font-size:11px;color:var(--gr);font-weight:500;font-family:var(--f-mono);text-transform:uppercase;letter-spacing:0.8px;}
+.ec-v{font-size:14px;font-weight:700;color:var(--d);margin-top:2px;}
+.confirm-btn{
+  width:100%;
+  background:var(--r);color:#fff;border:none;
+  padding:20px;border-radius:18px;
+  font-family:var(--f-head);
+  font-size:22px;font-weight:700;
+  letter-spacing:-0.5px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 8px 32px rgba(192,57,43,0.4);
+  transition:all .18s;
+}
+.confirm-btn:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(192,57,43,0.5);}
+.gps-note{
+  text-align:center;font-size:11.5px;color:var(--gr);
+  margin-top:10px;display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.cancel-btn{
+  width:100%;background:transparent;border:1.5px solid rgba(0,0,0,0.1);
+  color:var(--gr);padding:14px;border-radius:14px;
+  font-family:var(--f-head);font-size:14px;font-weight:700;
+  cursor:pointer;margin-top:10px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   HOSPITAL FINDER
+═══════════════════════════════════════════════════════ */
+.hf{background:var(--w);min-height:720px;}
+.hf-head{
+  background:var(--r);padding:16px 24px;
+  display:flex;align-items:center;gap:10px;
+}
+.hf-title{font-family:var(--f-head);font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.4px;}
+.hf-sub{font-size:11.5px;color:rgba(255,255,255,0.6);margin-top:1px;}
+.live-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#6FFFC2;margin-left:auto;flex-shrink:0;
+  animation:live-pulse 1.5s ease-in-out infinite;
+}
+@keyframes live-pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.map-ph{
+  height:190px;
+  background:linear-gradient(135deg,#C8E6D4,#A8D5B8);
+  position:relative;display:flex;align-items:center;justify-content:center;
+  border-bottom:1px solid rgba(0,0,0,0.08);
+}
+.map-ph::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(255,255,255,0.15) 40px,rgba(255,255,255,0.15) 41px),
+             repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,0.15) 40px,rgba(255,255,255,0.15) 41px);
+}
+.map-inner{position:relative;z-index:1;text-align:center;}
+.map-pin-icon{font-size:32px;display:block;margin-bottom:4px;}
+.map-label{font-size:12px;font-weight:700;color:var(--g);background:rgba(255,255,255,0.9);padding:4px 12px;border-radius:20px;}
+.hf-body{padding:16px 20px;}
+.hospital-card{
+  display:flex;gap:14px;
+  background:#fff;border-radius:16px;
+  padding:16px;margin-bottom:10px;
+  border:1px solid rgba(0,0,0,0.07);
+  box-shadow:0 2px 12px rgba(0,0,0,0.04);
+}
+.h-rank{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--l);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--f-head);font-size:14px;font-weight:700;color:var(--g);
+  flex-shrink:0;
+}
+.h-name{font-size:14px;font-weight:700;color:var(--d);letter-spacing:-0.2px;}
+.h-addr{font-size:11.5px;color:var(--gr);margin-top:3px;line-height:1.4;}
+.h-meta{display:flex;align-items:center;gap:8px;margin-top:10px;}
+.h-status{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 9px;border-radius:20px;
+  font-size:11px;font-weight:600;
+  font-family:var(--f-mono);
+}
+.h-open{background:rgba(24,165,116,0.12);color:var(--g);}
+.h-closed{background:rgba(192,57,43,0.1);color:var(--r);}
+.h-dist{font-size:12px;font-weight:700;color:var(--g);font-family:var(--f-mono);}
+.dir-btn{
+  margin-left:auto;
+  background:var(--l);color:var(--g);
+  border:1px solid rgba(24,165,116,0.2);
+  padding:7px 12px;border-radius:10px;
+  font-size:12px;font-weight:600;cursor:pointer;
+  font-family:var(--f-body);
+}
+
+/* ═══════════════════════════════════════════════════════
+   RECEIPT
+═══════════════════════════════════════════════════════ */
+.rc{background:var(--w);min-height:720px;}
+.rc-head{
+  background:var(--g);padding:16px 24px;
+  display:flex;align-items:center;gap:10px;
+}
+.rc-title{font-family:var(--f-head);font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.4px;}
+.rc-body{padding:20px;}
+.rc-hero{text-align:center;padding:24px 0;border-bottom:1px solid rgba(0,0,0,0.06);margin-bottom:20px;}
+.rc-big{
+  font-family:var(--f-head);font-size:52px;font-weight:700;
+  color:var(--r);letter-spacing:-2px;line-height:1;
+  margin-bottom:6px;
+}
+.rc-big-label{font-size:12px;color:var(--gr);font-family:var(--f-mono);text-transform:uppercase;letter-spacing:1px;}
+.rc-card{background:#fff;border-radius:18px;padding:18px;border:1px solid rgba(0,0,0,0.06);margin-bottom:14px;}
+.rc-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);}
+.rc-row:last-child{border:none}
+.rc-k{font-size:12.5px;color:var(--gr);}
+.rc-v{font-size:13.5px;font-weight:700;color:var(--d);}
+.rc-v.g{color:var(--t);}
+.pay-item{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.05);}
+.pay-item:last-child{border:none}
+.pi-dest{font-size:13.5px;font-weight:700;color:var(--d);}
+.pi-ref{font-size:10.5px;color:var(--gr);font-family:var(--f-mono);margin-top:2px;}
+.pi-amt{font-family:var(--f-head);font-size:16px;font-weight:700;color:var(--t);}
+.broadcast-note{
+  background:var(--l);border-radius:14px;padding:14px;
+  text-align:center;margin-top:12px;
+  font-size:12.5px;color:var(--g);font-weight:500;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GROUP CREATION
+═══════════════════════════════════════════════════════ */
+.gc{background:var(--w);min-height:720px;}
+.gc-head{
+  background:var(--d);padding:24px 24px 32px;
+  position:relative;overflow:hidden;
+}
+.gc-bg{
+  position:absolute;font-family:var(--f-head);
+  font-size:180px;font-weight:700;
+  color:rgba(255,255,255,0.04);
+  bottom:-40px;right:-20px;
+  letter-spacing:-8px;
+}
+.gc-step{
+  font-family:var(--f-mono);font-size:10px;
+  text-transform:uppercase;letter-spacing:1.5px;
+  color:rgba(255,255,255,0.35);margin-bottom:8px;
+}
+.gc-title{
+  font-family:var(--f-head);font-size:26px;font-weight:700;
+  color:#fff;letter-spacing:-0.8px;
+  position:relative;z-index:1;
+}
+.step-bar{display:flex;gap:5px;margin-top:16px;position:relative;z-index:1;}
+.sb{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,0.1);}
+.sb.done{background:var(--t);}
+.sb.active{background:#fff;}
+.gc-body{padding:20px 24px;}
+.mode-opt{
+  border:2px solid rgba(0,0,0,0.08);
+  border-radius:16px;padding:16px;
+  cursor:pointer;margin-bottom:10px;
+  transition:all .18s;
+  background:#fff;
+}
+.mode-opt.sel{border-color:var(--t);background:rgba(24,165,116,0.04);}
+.mo-head{display:flex;align-items:center;justify-content:space-between;}
+.mo-title{font-size:14px;font-weight:700;color:var(--d);letter-spacing:-0.2px;}
+.radio{
+  width:20px;height:20px;border-radius:50%;
+  border:2px solid rgba(0,0,0,0.15);
+  flex-shrink:0;position:relative;
+}
+.radio.on{border-color:var(--t);}
+.radio.on::after{
+  content:'';width:8px;height:8px;border-radius:50%;
+  background:var(--t);
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+}
+.mo-desc{font-size:12.5px;color:var(--gr);margin-top:8px;line-height:1.5;}
+
+/* ═══════════════════════════════════════════════════════
+   SISTER VIEW (WEB)
+═══════════════════════════════════════════════════════ */
+.sv{background:var(--w);}
+.sv-nav{
+  background:var(--d);
+  padding:16px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sv-logo{font-family:var(--f-head);font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.5px;display:flex;align-items:center;gap:10px;}
+.sv-logo .lm{width:30px;height:30px;background:var(--g);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;}
+.sv-emg{
+  background:var(--r);color:#fff;
+  border-radius:8px;padding:6px 14px;
+  font-family:var(--f-mono);font-size:11px;font-weight:500;
+  text-transform:uppercase;letter-spacing:1px;
+  animation:sv-blink 1.8s ease-in-out infinite;
+}
+@keyframes sv-blink{0%,100%{opacity:1}50%{opacity:0.5}}
+.sv-hero{
+  padding:40px;
+  border-bottom:1px solid rgba(0,0,0,0.07);
+  background:#fff;
+}
+.sv-patient-line{
+  display:flex;align-items:center;gap:16px;margin-bottom:8px;
+}
+.sv-av{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--g);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--f-head);font-size:22px;font-weight:700;color:#fff;
+  flex-shrink:0;
+}
+.sv-pname{
+  font-family:var(--f-head);font-size:32px;font-weight:700;
+  color:var(--d);letter-spacing:-1px;
+}
+.sv-meta{font-size:14px;color:var(--gr);margin-top:4px;}
+.sv-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;
+  padding:32px 40px;
+}
+.sv-card{
+  background:#fff;border-radius:20px;padding:24px;
+  border:1px solid rgba(0,0,0,0.07);
+  box-shadow:0 4px 24px rgba(0,0,0,0.05);
+}
+.sv-card-title{
+  font-family:var(--f-head);font-size:16px;font-weight:700;
+  color:var(--d);margin-bottom:18px;letter-spacing:-0.3px;
+  display:flex;align-items:center;gap:8px;
+}
+.sv-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(0,0,0,0.05);}
+.sv-row:last-child{border:none}
+.sv-k{font-size:12.5px;color:var(--gr);}
+.sv-v{font-size:14px;font-weight:700;color:var(--d);}
+.sv-balance{
+  font-family:var(--f-head);font-size:48px;font-weight:700;
+  color:var(--g);letter-spacing:-2px;line-height:1;
+  margin:8px 0;
+}
+.sv-balance-label{font-family:var(--f-mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--gr);}
+.floor-box{
+  background:rgba(212,160,23,0.08);
+  border:1px solid rgba(212,160,23,0.25);
+  border-radius:12px;padding:12px 14px;
+  font-size:12.5px;color:#8a6700;margin:14px 0;line-height:1.5;
+}
+.release-input-wrap{position:relative;margin:14px 0;}
+.ri-pre{
+  position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  font-family:var(--f-head);font-size:28px;font-weight:700;color:var(--g);
+}
+.ri{
+  width:100%;
+  background:var(--l);border:2px solid transparent;
+  border-radius:14px;
+  padding:18px 18px 18px 48px;
+  font-family:var(--f-head);font-size:32px;font-weight:700;color:var(--d);
+  outline:none;
+}
+.ri:focus{border-color:var(--t);background:#fff;}
+.release-btn{
+  width:100%;background:var(--g);color:#fff;border:none;
+  padding:18px;border-radius:14px;
+  font-family:var(--f-head);font-size:20px;font-weight:700;
+  cursor:pointer;letter-spacing:-0.5px;
+  box-shadow:0 6px 24px rgba(26,107,74,0.3);
+  transition:all .18s;
+}
+.release-btn:hover{background:#155a3d;transform:translateY(-1px);}
+
+/* ═══════════════════════════════════════════════════════
+   SMS / VITAVOICE
+═══════════════════════════════════════════════════════ */
+.sms-screen{background:#F0F0EF;min-height:720px;}
+.sms-bar{
+  background:#fff;padding:14px 20px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(0,0,0,0.07);
+  position:sticky;top:0;z-index:10;
+}
+.sms-av{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--g);display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:15px;
+}
+.sms-name{font-size:14px;font-weight:700;color:var(--d);}
+.sms-num{font-size:11.5px;color:var(--gr);font-family:var(--f-mono);}
+.sms-list{padding:14px 16px;display:flex;flex-direction:column;gap:8px;}
+.bubble{max-width:82%;}
+.bubble.in{align-self:flex-start;}
+.bubble.out{align-self:flex-end;}
+.btext{
+  border-radius:18px;padding:11px 15px;
+  font-size:13.5px;line-height:1.55;
+}
+.bubble.in .btext{background:#fff;color:var(--d);border-bottom-left-radius:4px;}
+.bubble.out .btext{background:var(--g);color:#fff;border-bottom-right-radius:4px;}
+.btime{font-size:10px;color:var(--gr);margin-top:3px;}
+.bubble.out .btime{text-align:right;}
+.link-preview{
+  background:var(--l);
+  border:1.5px solid rgba(24,165,116,0.25);
+  border-radius:14px;padding:13px;
+  max-width:85%;margin:4px 0;
+}
+.lp-url{font-family:var(--f-mono);font-size:10.5px;color:var(--t);margin-bottom:5px;}
+.lp-title{font-weight:700;font-size:13px;color:var(--d);}
+.lp-sub{font-size:11.5px;color:var(--gr);margin-top:2px;}
+
+/* ═══════════════════════════════════════════════════════
+   EMPTY STATES
+═══════════════════════════════════════════════════════ */
+.empty-state{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:52px 24px;text-align:center;
+}
+.es-icon-wrap{
+  width:100px;height:100px;border-radius:50%;
+  background:var(--l);
+  display:flex;align-items:center;justify-content:center;
+  font-size:44px;margin-bottom:20px;
+}
+.es-title{
+  font-family:var(--f-head);font-size:20px;font-weight:700;
+  color:var(--d);margin-bottom:8px;letter-spacing:-0.5px;
+}
+.es-sub{font-size:13.5px;color:var(--gr);line-height:1.6;max-width:240px;margin-bottom:24px;}
+.dashed-card{
+  border:2px dashed rgba(0,0,0,0.1);
+  border-radius:18px;padding:24px;
+  text-align:center;margin:0 20px 20px;
+  background:transparent;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TOASTS
+═══════════════════════════════════════════════════════ */
+.toast-list{padding:24px;display:flex;flex-direction:column;gap:10px;}
+.toast{
+  border-radius:16px;padding:14px 16px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.12);
+}
+.t-success{background:var(--g);color:#fff;}
+.t-error{background:var(--r);color:#fff;}
+.t-warn{background:var(--go);color:var(--d);}
+.t-info{background:var(--d);color:#fff;}
+.ti{font-size:20px;flex-shrink:0;}
+.tm{font-size:13.5px;font-weight:600;}
+.ts{font-size:11.5px;opacity:0.7;margin-top:2px;}
+.tx{margin-left:auto;opacity:0.5;font-size:16px;cursor:pointer;}
+
+/* ═══════════════════════════════════════════════════════
+   LOADING
+═══════════════════════════════════════════════════════ */
+.sk{
+  background:linear-gradient(90deg,rgba(0,0,0,0.05) 25%,rgba(0,0,0,0.1) 50%,rgba(0,0,0,0.05) 75%);
+  background-size:200% 100%;
+  animation:sk-shine 1.5s infinite;
+  border-radius:8px;
+}
+@keyframes sk-shine{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-dark{
+  background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.1) 50%,rgba(255,255,255,0.04) 75%);
+  background-size:200% 100%;
+  animation:sk-shine 1.5s infinite;
+  border-radius:8px;
+}
+.spin{
+  width:48px;height:48px;
+  border:4px solid var(--l);
+  border-top-color:var(--t);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{100%{transform:rotate(360deg)}}
+
+/* ═══════════════════════════════════════════════════════
+   ADMIN
+═══════════════════════════════════════════════════════ */
+.pending-banner{
+  background:rgba(212,160,23,0.1);
+  border:1.5px solid rgba(212,160,23,0.35);
+  border-radius:14px;padding:14px;
+  margin-bottom:14px;
+  display:flex;gap:12px;
+}
+.pb-timer{
+  font-family:var(--f-mono);font-size:15px;font-weight:700;
+  color:var(--go);margin-top:4px;
+}
+
+/* SCROLLBAR GLOBAL */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.15);border-radius:10px}
+</style>
+</head>
+<body>
+<div id="shell">
+
+<!-- ── SIDEBAR ─────────────────────────────────────────── -->
+<nav id="nav">
+  <div class="nav-logo">
+    <div class="logo-mark">V</div>
+    <div class="logo-word">VITA</div>
+  </div>
+
+  <div class="nav-group">Mobile</div>
+  <div class="ni on" onclick="go('onboarding',this)"><span class="ni-ic">🌱</span>Onboarding</div>
+  <div class="ni" onclick="go('auth',this)"><span class="ni-ic">🔐</span>Auth</div>
+  <div class="ni" onclick="go('dashboard',this)"><span class="ni-ic">🏠</span>Dashboard</div>
+  <div class="ni" onclick="go('health',this)"><span class="ni-ic">🩺</span>Health Profile</div>
+  <div class="ni" onclick="go('nfcwrite',this)"><span class="ni-ic">📲</span>NFC Write <span class="ni-pill np-g">NFC</span></div>
+  <div class="ni" onclick="go('nfcread',this)"><span class="ni-ic">📡</span>NFC Read <span class="ni-pill np-g">NFC</span></div>
+  <div class="ni" onclick="go('emergency',this)"><span class="ni-ic">🚨</span>Emergency <span class="ni-pill np-r">!</span></div>
+  <div class="ni" onclick="go('hospital',this)"><span class="ni-ic">🏥</span>Hospital Finder</div>
+  <div class="ni" onclick="go('receipt',this)"><span class="ni-ic">🧾</span>Receipt</div>
+  <div class="ni" onclick="go('groupcreate',this)"><span class="ni-ic">👥</span>Group Creation</div>
+  <div class="ni" onclick="go('members',this)"><span class="ni-ic">🤝</span>Members</div>
+  <div class="ni" onclick="go('admin',this)"><span class="ni-ic">⚙️</span>Admin</div>
+
+  <div class="nav-group">Web</div>
+  <div class="ni" onclick="go('sister',this)"><span class="ni-ic">💻</span>Sister View</div>
+  <div class="ni" onclick="go('sms',this)"><span class="ni-ic">💬</span>VitaVoice SMS</div>
+
+  <div class="nav-group">States</div>
+  <div class="ni" onclick="go('empty',this)"><span class="ni-ic">📭</span>Empty States</div>
+  <div class="ni" onclick="go('loading',this)"><span class="ni-ic">⏳</span>Loading</div>
+  <div class="ni" onclick="go('toasts',this)"><span class="ni-ic">🔔</span>Toasts</div>
+
+  <div class="nav-foot">
+    <div class="nav-av">WM</div>
+    <div><div class="nav-name">Wali Medugu</div><div class="nav-role">Admin · Kano Pool</div></div>
+  </div>
+</nav>
+
+<!-- ── MAIN ─────────────────────────────────────────────── -->
+<main id="main">
+
+<!-- ══════════════════ ONBOARDING ══════════════════════════ -->
+<section id="s-onboarding" class="scr on">
+  <div class="sh"><div><div class="sh-title">Onboarding</div><div class="sh-sub">3-screen first-launch flow</div></div><div class="sh-tag">Mobile</div></div>
+  <div class="canvas">
+
+    <!-- Slide 1 -->
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="ob" style="background:#1A6B4A">
+            <div class="ob-bg-num">01</div>
+            <div class="ob-float">
+              <div class="ob-float-label">Pool Size</div>
+              <div class="ob-float-val">133M</div>
+              <div class="ob-float-sub">Uninsured Nigerians</div>
+            </div>
+            <div class="ob-tag">● VitaCard</div>
+            <div class="ob-hero">
+              <div class="ob-word-big">Your<br>Health</div>
+              <div class="ob-word-ital">always with you.</div>
+              <div class="ob-body">A ₦300 NFC sticker stores your blood type, allergies, and emergency contacts — readable offline in any crisis.</div>
+              <div class="ob-progress"><div class="ob-p-seg on"></div><div class="ob-p-seg"></div><div class="ob-p-seg"></div></div>
+            </div>
+            <div class="ob-foot">
+              <button class="ob-btn">Get Started <div class="ob-btn-arrow">→</div></button>
+              <div class="ob-skip">Already registered? <span>Sign In</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Slide 1 — VitaCard</div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="ob" style="background:#1A1A2E">
+            <div class="ob-bg-num">02</div>
+            <div class="ob-float" style="background:rgba(212,160,23,0.15);border-color:rgba(212,160,23,0.2);">
+              <div class="ob-float-label">Pool Today</div>
+              <div class="ob-float-val" style="color:#F5D060;">₦48k</div>
+              <div class="ob-float-sub" style="color:rgba(212,160,23,0.6);">18 members</div>
+            </div>
+            <div class="ob-tag" style="background:rgba(212,160,23,0.15);color:rgba(212,160,23,0.8);">● VitaPool</div>
+            <div class="ob-hero">
+              <div class="ob-word-big">Community</div>
+              <div class="ob-word-ital">funds that act fast.</div>
+              <div class="ob-body">Tiny ₦100 sweeps from everyday OPay transactions build a shared safety fund — ready the moment anyone needs it most.</div>
+              <div class="ob-progress"><div class="ob-p-seg"></div><div class="ob-p-seg on"></div><div class="ob-p-seg"></div></div>
+            </div>
+            <div class="ob-foot">
+              <button class="ob-btn" style="background:rgba(255,255,255,0.9);">Next <div class="ob-btn-arrow" style="background:#1A1A2E;">→</div></button>
+              <div class="ob-skip">Skip intro</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Slide 2 — VitaPool</div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="ob" style="background:#0D2A1E">
+            <div class="ob-bg-num">90</div>
+            <div class="ob-tag">● VitaVoice</div>
+            <div class="ob-hero">
+              <div class="ob-word-big">90</div>
+              <div class="ob-word-ital">seconds to help.</div>
+              <div class="ob-body">Tap card → get first aid → trigger pool → funds reach bystander. Even in rural areas, even without a smartphone.</div>
+              <div class="ob-progress"><div class="ob-p-seg"></div><div class="ob-p-seg"></div><div class="ob-p-seg on"></div></div>
+            </div>
+            <div class="ob-foot">
+              <button class="ob-btn">Create Account <div class="ob-btn-arrow">→</div></button>
+              <div class="ob-skip">Sign In Instead</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Slide 3 — 90s Flow</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ AUTH ══════════════════════════════ -->
+<section id="s-auth" class="scr">
+  <div class="sh"><div><div class="sh-title">Auth</div><div class="sh-sub">Register &amp; Login toggle</div></div><div class="sh-tag">Mobile</div></div>
+  <div class="canvas">
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="auth">
+            <div class="auth-hero">
+              <div class="auth-bg-text">VITA</div>
+              <div class="auth-title">Welcome<br><em>back.</em></div>
+            </div>
+            <div class="auth-tabs">
+              <div class="at on">Login</div>
+              <div class="at">Register</div>
+            </div>
+            <div class="auth-form">
+              <div class="fl"><label class="fl-label">Email</label><input class="fi" value="wali@example.com" readonly></div>
+              <div class="fl"><label class="fl-label">Password</label><input class="fi" type="password" placeholder="••••••••" readonly></div>
+              <div style="text-align:right;margin-bottom:20px;"><span style="font-size:12.5px;color:var(--g);font-weight:600;cursor:pointer;">Forgot password?</span></div>
+              <button class="btn-g">Sign In →</button>
+              <div class="auth-link">Don't have an account? <a>Register</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Login</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="auth">
+            <div class="auth-hero">
+              <div class="auth-bg-text">JOIN</div>
+              <div class="auth-title">Create<br><em>account.</em></div>
+            </div>
+            <div class="auth-tabs">
+              <div class="at">Login</div>
+              <div class="at on">Register</div>
+            </div>
+            <div class="auth-form">
+              <div class="fl"><label class="fl-label">Full Name</label><input class="fi" placeholder="Amina Bello" readonly></div>
+              <div class="fl"><label class="fl-label">Email</label><input class="fi" placeholder="amina@example.com" readonly></div>
+              <div class="fl"><label class="fl-label">Phone</label><input class="fi" placeholder="+234 801 234 5678" readonly></div>
+              <div class="fl"><label class="fl-label">Password</label><input class="fi" type="password" placeholder="At least 8 characters" readonly></div>
+              <button class="btn-g" style="margin-top:6px;">Create Account →</button>
+              <div class="auth-link">Have an account? <a>Sign In</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Register</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ DASHBOARD ═════════════════════════ -->
+<section id="s-dashboard" class="scr">
+  <div class="sh"><div><div class="sh-title">Live Pool Dashboard</div><div class="sh-sub">Real-time feed · emergency CTA · quick actions</div></div><div class="sh-tag">Mobile</div></div>
+  <div class="canvas">
+
+    <!-- Passive Mode -->
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="dash">
+            <div class="dash-top">
+              <div class="dt-bg">VITA</div>
+              <div class="dt-row">
+                <div><div class="dt-greet">GOOD MORNING</div><div style="font-family:var(--f-head);font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.5px;">Wali Medugu</div></div>
+                <div class="dt-icons"><div class="dt-ic">🔔</div><div class="dt-ic">⚙️</div></div>
+              </div>
+              <div class="pool-card">
+                <div class="pc-eyebrow">Kano Solidarity Pool</div>
+                <div class="pc-amount"><sup>₦</sup>48,350</div>
+                <div class="pc-meta">
+                  <div class="mode-pill"><div class="mode-dot active"></div>Passive</div>
+                  <div class="floor-badge">🔒 ₦3k floor</div>
+                </div>
+              </div>
+            </div>
+            <div class="dash-body">
+              <div class="qg">
+                <div class="qa"><div class="qa-em">📲</div><div class="qa-t">Write Card</div><div class="qa-s">NFC enrolment</div></div>
+                <div class="qa"><div class="qa-em">📡</div><div class="qa-t">Scan Card</div><div class="qa-s">Read patient</div></div>
+                <div class="qa"><div class="qa-em">👥</div><div class="qa-t">Members</div><div class="qa-s">18 active</div></div>
+                <div class="qa"><div class="qa-em">🩺</div><div class="qa-t">My Profile</div><div class="qa-s">Update health</div></div>
+              </div>
+              <div class="db-section"><div class="db-live"></div>Live Feed</div>
+              <div class="txn"><div class="txn-av">FO</div><div><div class="txn-n">Funke Ojo</div><div class="txn-ref">OPY-2024-884772</div></div><div class="txn-r"><div class="txn-amt">+₦100</div><div class="txn-t">2 min ago</div></div></div>
+              <div class="txn"><div class="txn-av">KA</div><div><div class="txn-n">Kabiru Aliyu</div><div class="txn-ref">OPY-2024-884401</div></div><div class="txn-r"><div class="txn-amt">+₦100</div><div class="txn-t">18 min ago</div></div></div>
+              <div class="txn"><div class="txn-av">NM</div><div><div class="txn-n">Ngozi Madu</div><div class="txn-ref">OPY-2024-883990</div></div><div class="txn-r"><div class="txn-amt">+₦100</div><div class="txn-t">2 hrs ago</div></div></div>
+              <div class="txn"><div class="txn-av">BT</div><div><div class="txn-n">Bola Taiwo</div><div class="txn-ref">OPY-2024-882217</div></div><div class="txn-r"><div class="txn-amt">+₦100</div><div class="txn-t">5 hrs ago</div></div></div>
+            </div>
+            <div class="emg-wrap" style="padding:0 20px 20px;">
+              <div class="emg-btn">
+                <div class="emg-pulse"></div>
+                <div class="emg-inner">
+                  <div class="emg-icon-wrap">🚨</div>
+                  <div class="emg-text"><div class="emg-label">EMERGENCY</div><div class="emg-sub">Activate VitaPool now</div></div>
+                  <div class="emg-arrow">→</div>
+                </div>
+              </div>
+            </div>
+            <div class="bnav"><div class="bn on"><em>🏠</em>Home</div><div class="bn"><em>🩺</em>Profile</div><div class="bn"><em>📡</em>NFC</div><div class="bn"><em>⚙️</em>More</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Dashboard — Passive Mode</div>
+    </div>
+
+    <!-- Scheduled Mode -->
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="dash">
+            <div class="dash-top" style="background:#0D2A1E">
+              <div class="dt-row">
+                <div><div class="dt-greet">GOOD MORNING</div><div style="font-family:var(--f-head);font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.5px;">Amina Bello</div></div>
+                <div class="dt-icons"><div class="dt-ic">🔔</div><div class="dt-ic">⚙️</div></div>
+              </div>
+              <div class="pool-card" style="background:#2A6040">
+                <div class="pc-eyebrow">Abuja Women's Pool</div>
+                <div class="pc-amount"><sup>₦</sup>71,200</div>
+                <div class="pc-meta">
+                  <div class="mode-pill" style="background:rgba(212,160,23,0.2);"><div class="mode-dot sched"></div>Scheduled</div>
+                  <div class="floor-badge">🔒 ₦3k floor</div>
+                </div>
+              </div>
+            </div>
+            <div class="dash-body">
+              <div style="background:#FFF8E6;border-radius:14px;padding:14px;margin-bottom:20px;border:1px solid rgba(212,160,23,0.25);">
+                <div style="font-size:11px;color:#8a6700;font-family:var(--f-mono);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Next Contribution</div>
+                <div style="font-family:var(--f-head);font-size:20px;font-weight:700;color:var(--d);letter-spacing:-0.5px;">Friday, Jun 6 · ₦500</div>
+                <div style="font-size:12px;color:var(--gr);margin-top:3px;">Auto-debit from OPay wallet</div>
+              </div>
+              <div class="db-section">Recent Activity</div>
+              <div class="txn"><div class="txn-av">ZB</div><div><div class="txn-n">Zainab Bala</div><div class="txn-ref">OPY-2024-991100</div></div><div class="txn-r"><div class="txn-amt">+₦500</div><div class="txn-t">1 day ago</div></div></div>
+              <div class="txn"><div class="txn-av">AB</div><div><div class="txn-n">Amina Bello</div><div class="txn-ref">OPY-2024-990877</div></div><div class="txn-r"><div class="txn-amt">+₦500</div><div class="txn-t">1 day ago</div></div></div>
+              <div class="txn"><div class="txn-av" style="background:#FEF0EF;color:var(--r);">RE</div><div><div class="txn-n">Emergency Release</div><div class="txn-ref">OPY-2024-EMG-0041</div></div><div class="txn-r"><div class="txn-amt" style="color:var(--r);">−₦12,000</div><div class="txn-t">3 days ago</div></div></div>
+            </div>
+            <div class="emg-wrap" style="padding:0 20px 20px;">
+              <div class="emg-btn"><div class="emg-inner"><div class="emg-icon-wrap">🚨</div><div class="emg-text"><div class="emg-label">EMERGENCY</div><div class="emg-sub">Activate VitaPool now</div></div><div class="emg-arrow">→</div></div></div>
+            </div>
+            <div class="bnav"><div class="bn on"><em>🏠</em>Home</div><div class="bn"><em>🩺</em>Profile</div><div class="bn"><em>📡</em>NFC</div><div class="bn"><em>⚙️</em>More</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Dashboard — Scheduled Mode</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ HEALTH PROFILE ════════════════════ -->
+<section id="s-health" class="scr">
+  <div class="sh"><div><div class="sh-title">Health Profile</div><div class="sh-sub">View + Edit</div></div><div class="sh-tag">Mobile</div></div>
+  <div class="canvas">
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="hp">
+            <div class="hp-head">
+              <div class="hp-bg">VITA</div>
+              <div class="hp-av">WM</div>
+              <div class="hp-name">Wali Medugu</div>
+              <div class="hp-email">wali@example.com</div>
+            </div>
+            <div class="hp-body">
+              <div class="hcard">
+                <div class="hcard-title">🩸 Medical Details</div>
+                <div class="hr"><span class="hr-k">Blood Type</span><span class="blood">O+</span></div>
+                <div class="hr"><span class="hr-k">Conditions</span></div>
+                <div class="tags"><span class="tag">Asthma</span><span class="tag">Hypertension</span></div>
+                <div class="hr" style="margin-top:10px;"><span class="hr-k">Allergies</span></div>
+                <div class="tags"><span class="tag danger">⚠ Penicillin</span><span class="tag danger">⚠ Peanuts</span><span class="tag danger">⚠ Latex</span></div>
+              </div>
+              <div class="hcard">
+                <div class="hcard-title">📞 Emergency Contacts</div>
+                <div class="hr"><div><div class="hr-k">Primary</div><div class="hr-v" style="margin-top:2px;">Fatima Medugu</div></div><div style="background:var(--l);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:600;color:var(--g);cursor:pointer;">📞 Call</div></div>
+                <div class="hr"><div><div class="hr-k">Secondary</div><div class="hr-v" style="margin-top:2px;">Dr. Nubwa Medugu</div></div><div style="background:var(--l);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:600;color:var(--g);cursor:pointer;">📞 Call</div></div>
+              </div>
+              <div class="hcard">
+                <div class="hcard-title">🏦 Linked VitaPool</div>
+                <div class="pool-link"><div class="pl-icon">🏦</div><div><div class="pl-id">POOL-KAN-0041</div><div class="pl-name">Kano Solidarity Pool · 18 members</div></div></div>
+              </div>
+              <button class="btn-g">Edit Health Profile →</button>
+            </div>
+            <div class="bnav"><div class="bn"><em>🏠</em>Home</div><div class="bn on"><em>🩺</em>Profile</div><div class="bn"><em>📡</em>NFC</div><div class="bn"><em>⚙️</em>More</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Health Profile — View</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="hp">
+            <div class="hp-head" style="text-align:left;">
+              <div style="display:flex;align-items:center;gap:10px;position:relative;z-index:1;margin-bottom:8px;"><span style="color:rgba(255,255,255,0.6);font-size:18px;cursor:pointer;">←</span><span style="font-family:var(--f-head);font-size:17px;font-weight:700;color:#fff;">Edit Profile</span></div>
+            </div>
+            <div class="hp-body" style="margin-top:0;padding-top:20px;">
+              <div class="fl"><label class="fl-label">Blood Type</label><select class="fi"><option>O+ (Positive)</option><option>O−</option><option>A+</option><option>A−</option><option>B+</option><option>AB+</option></select></div>
+              <div class="fl">
+                <label class="fl-label">Conditions</label>
+                <div class="tags" style="margin-bottom:8px;"><span class="tag">Asthma ✕</span><span class="tag">Hypertension ✕</span></div>
+                <input class="fi" placeholder="Add a condition...">
+              </div>
+              <div class="fl">
+                <label class="fl-label">Allergies</label>
+                <div class="tags" style="margin-bottom:8px;"><span class="tag danger">Penicillin ✕</span><span class="tag danger">Peanuts ✕</span></div>
+                <input class="fi" placeholder="Add an allergen...">
+              </div>
+              <div class="fl"><label class="fl-label">Primary Contact Name</label><input class="fi" value="Fatima Medugu" readonly></div>
+              <div class="fl"><label class="fl-label">Primary Contact Phone</label><input class="fi" value="+234 800 123 4567" readonly></div>
+              <div class="fl"><label class="fl-label">Secondary Contact</label><input class="fi" value="Dr. Nubwa Medugu" readonly></div>
+              <div class="fl"><label class="fl-label">VitaPool ID</label><input class="fi" value="POOL-KAN-0041" readonly></div>
+              <button class="btn-g">Save Changes →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Health Profile — Edit</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ NFC WRITE ═════════════════════════ -->
+<section id="s-nfcwrite" class="scr">
+  <div class="sh"><div><div class="sh-title">NFC Write — VitaCard Enrolment</div><div class="sh-sub">Android only · NTAG213</div></div><div class="sh-tag">Android NFC</div></div>
+  <div class="canvas">
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="nfc-screen">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+              <div class="ring" style="width:320px;height:320px;"></div>
+              <div class="ring" style="width:240px;height:240px;opacity:0.5;"></div>
+              <div class="ring" style="width:160px;height:160px;opacity:0.3;"></div>
+            </div>
+            <div class="nfc-head">
+              <div class="back-btn">←</div>
+              <div class="nfc-head-title">Write VitaCard</div>
+              <div class="nfc-badge">Android · NFC</div>
+            </div>
+            <div class="nfc-center">
+              <div class="tap-circle">
+                <div class="tap-orbit"></div>
+                <div class="tap-inner">📲</div>
+              </div>
+              <div class="nfc-t">Tap your VitaCard</div>
+              <div class="nfc-s">Hold the NFC sticker to the top of your phone to encode your health profile</div>
+              <div class="nfc-data">
+                <div class="nd-row"><span class="nd-k">name</span><span class="nd-v">Wali Medugu</span></div>
+                <div class="nd-row"><span class="nd-k">blood</span><span class="nd-v" style="color:#FF8070;">O+</span></div>
+                <div class="nd-row"><span class="nd-k">allergies</span><span class="nd-v">Penicillin, Peanuts</span></div>
+                <div class="nd-row"><span class="nd-k">pool_id</span><span class="nd-v" style="color:#6FFFC2;">POOL-KAN-0041</span></div>
+                <div class="nd-row"><span class="nd-k">contact_1</span><span class="nd-v">+234 800 123 4567</span></div>
+              </div>
+            </div>
+            <div class="nfc-foot">
+              <button class="btn-t">Confirm &amp; Write →</button>
+              <div style="text-align:center;margin-top:12px;font-size:11px;color:rgba(255,255,255,0.25);">Ensure NFC is enabled on your device</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">NFC Write — Ready</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="nfc-screen" style="justify-content:center;align-items:center;">
+            <div style="text-align:center;padding:40px 24px;position:relative;z-index:1;">
+              <div style="width:100px;height:100px;border-radius:50%;background:rgba(24,165,116,0.15);border:2px solid var(--t);display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 24px;">✅</div>
+              <div class="nfc-t">Card Written!</div>
+              <div class="nfc-s" style="margin-bottom:28px;">Your medical profile is now encoded. Anyone with VITA can tap to access it offline in an emergency.</div>
+              <div class="nfc-data" style="text-align:left;margin-bottom:24px;">
+                <div class="nd-row"><span class="nd-k">status</span><span class="nd-v" style="color:#6FFFC2;">● success</span></div>
+                <div class="nd-row"><span class="nd-k">bytes</span><span class="nd-v">248 / 144</span></div>
+                <div class="nd-row"><span class="nd-k">format</span><span class="nd-v">NTAG213 · NDEF</span></div>
+              </div>
+              <button class="btn-t">Done →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">NFC Write — Success</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ NFC READ ══════════════════════════ -->
+<section id="s-nfcread" class="scr">
+  <div class="sh"><div><div class="sh-title">NFC Read — Bystander Mode</div><div class="sh-sub">Offline patient ID + Gemini first aid</div></div><div class="sh-tag">Android NFC</div></div>
+  <div class="canvas">
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="nfc-screen">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+              <div class="ring" style="width:320px;height:320px;"></div>
+              <div class="ring" style="width:200px;height:200px;opacity:0.4;"></div>
+            </div>
+            <div class="nfc-head"><div class="back-btn">←</div><div class="nfc-head-title">Scan Patient Card</div></div>
+            <div class="nfc-center">
+              <div class="tap-circle"><div class="tap-orbit"></div><div class="tap-inner">📡</div></div>
+              <div class="nfc-t">Ready to Scan</div>
+              <div class="nfc-s">Tap the patient's VitaCard sticker against your phone to instantly access their health data offline</div>
+              <div style="background:rgba(24,165,116,0.1);border:1.5px dashed rgba(24,165,116,0.3);border-radius:16px;padding:16px;text-align:center;width:100%;margin-top:20px;">
+                <div style="font-size:24px;margin-bottom:6px;">🃏</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.45);">Works fully offline · No internet needed</div>
+              </div>
+            </div>
+            <div class="nfc-foot" style="padding-bottom:28px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">NFC Read — Ready</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="nr">
+            <div class="nr-head">
+              <div class="nr-hrow">
+                <div class="back-btn" style="background:rgba(255,255,255,0.08);">←</div>
+                <div style="margin-left:4px;"><div style="font-size:11px;color:rgba(255,255,255,0.4);font-family:var(--f-mono);text-transform:uppercase;letter-spacing:1px;">Patient Identified</div><div style="font-size:12px;color:rgba(24,165,116,0.8);font-family:var(--f-mono);">● Offline · VITA-NG-002841</div></div>
+                <div class="nr-bt">A−</div>
+              </div>
+              <div class="nr-name">Funke Okafor</div>
+              <div class="nr-id">NFC read · Jun 02, 2026 · 14:17 WAT</div>
+            </div>
+            <div class="nr-body">
+              <div style="margin-bottom:14px;">
+                <div style="font-size:11.5px;font-weight:600;color:var(--gr);font-family:var(--f-mono);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">⚠ Allergies</div>
+                <div class="tags"><span class="tag danger">⚠ Aspirin</span><span class="tag danger">⚠ Sulfa drugs</span></div>
+              </div>
+              <div style="margin-bottom:14px;">
+                <div style="font-size:11.5px;font-weight:600;color:var(--gr);font-family:var(--f-mono);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Conditions</div>
+                <div class="tags"><span class="tag">Type 2 Diabetes</span><span class="tag">Hypertension</span></div>
+              </div>
+              <div class="fa-card">
+                <div class="fa-title">🤖 Gemini · WHO First Aid</div>
+                <div class="fa-step"><div class="fa-num">1</div><div class="fa-text">Check consciousness — call out, tap shoulder firmly</div></div>
+                <div class="fa-step"><div class="fa-num">2</div><div class="fa-text">If conscious &amp; diabetic: give sugary drink or glucose gel immediately</div></div>
+                <div class="fa-step"><div class="fa-num">3</div><div class="fa-text">If unconscious: recovery position, monitor breathing, do NOT give food</div></div>
+                <div class="fa-step"><div class="fa-num">4</div><div class="fa-text"><strong>Do NOT give Aspirin or Sulfa drugs</strong> — patient is allergic</div></div>
+                <div class="fa-warn">⚠️ AI-generated guidance only. Seek professional medical help immediately and always.</div>
+              </div>
+            </div>
+            <div class="nr-actions">
+              <button class="btn-g btn-r" style="flex:1.5;">🚨 EMERGENCY</button>
+              <button class="btn-outline">📞 Call</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">NFC Read — Patient + First Aid</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ EMERGENCY ════════════════════════ -->
+<section id="s-emergency" class="scr">
+  <div class="sh"><div><div class="sh-title">Emergency Confirm</div><div class="sh-sub">GPS capture · one-tap activation</div></div><div class="sh-tag">Mobile</div></div>
+  <div class="canvas">
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="ec">
+            <div class="ec-top">
+              <div class="ec-bg">!</div>
+              <div class="ec-em">🚨</div>
+              <div class="ec-t">Emergency<br>Activation</div>
+              <div class="ec-s">Confirm to alert contacts &amp; release VitaPool</div>
+            </div>
+            <div class="ec-body">
+              <div class="ec-card">
+                <div class="ec-row"><div class="ec-ic">🧑</div><div><div class="ec-k">Patient</div><div class="ec-v">Funke Okafor</div></div></div>
+                <div class="ec-row"><div class="ec-ic">🩸</div><div><div class="ec-k">Blood Type</div><div class="ec-v">A− Negative</div></div></div>
+                <div class="ec-row"><div class="ec-ic">📍</div><div><div class="ec-k">Your GPS Location</div><div class="ec-v">9.0579° N, 7.4951° E</div><div style="font-size:11.5px;color:var(--gr);margin-top:2px;">Near Wuse 2, Abuja</div></div></div>
+                <div class="ec-row"><div class="ec-ic">🏦</div><div><div class="ec-k">Pool Available</div><div class="ec-v" style="color:var(--g);">₦48,350</div></div></div>
+                <div class="ec-row"><div class="ec-ic">⚠️</div><div><div class="ec-k">Allergies — Do NOT give</div><div class="ec-v" style="color:var(--r);">Aspirin · Sulfa drugs</div></div></div>
+              </div>
+              <button class="confirm-btn">🆘 CONFIRM EMERGENCY</button>
+              <div class="gps-note">📍 GPS shared with all emergency contacts</div>
+              <button class="cancel-btn">Cancel — False Alarm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Emergency Confirm</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ HOSPITAL FINDER ══════════════════ -->
+<section id="s-hospital" class="scr">
+  <div class="sh"><div><div class="sh-title">Hospital Finder</div><div class="sh-sub">3 nearest · GPS-based · live status</div></div><div class="sh-tag">Mobile</div></div>
+  <div class="canvas">
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="hf">
+            <div class="hf-head">
+              <div><div class="hf-title">Nearby Hospitals</div><div class="hf-sub">Emergency active · Abuja, FCT</div></div>
+              <div class="live-dot"></div>
+            </div>
+            <div class="map-ph">
+              <div class="map-inner"><span class="map-pin-icon">📍</span><div class="map-label">Abuja, FCT · Live Map</div></div>
+            </div>
+            <div class="hf-body">
+              <div style="font-size:12px;color:var(--gr);font-family:var(--f-mono);margin-bottom:12px;">3 HOSPITALS FOUND NEARBY</div>
+              <div class="hospital-card">
+                <div class="h-rank">1</div>
+                <div class="h-info">
+                  <div class="h-name">National Hospital Abuja</div>
+                  <div class="h-addr">Plot 132 Central Business District, Abuja</div>
+                  <div class="h-meta"><span class="h-status h-open">● Open</span><span class="h-dist">1.2 km</span><button class="dir-btn">🗺 Directions</button></div>
+                </div>
+              </div>
+              <div class="hospital-card">
+                <div class="h-rank">2</div>
+                <div class="h-info">
+                  <div class="h-name">Maitama District Hospital</div>
+                  <div class="h-addr">Maitama District, Abuja FCT</div>
+                  <div class="h-meta"><span class="h-status h-open">● Open</span><span class="h-dist">2.7 km</span><button class="dir-btn">🗺 Directions</button></div>
+                </div>
+              </div>
+              <div class="hospital-card">
+                <div class="h-rank">3</div>
+                <div class="h-info">
+                  <div class="h-name">Garki General Hospital</div>
+                  <div class="h-addr">Area 1, Garki District, Abuja</div>
+                  <div class="h-meta"><span class="h-status h-closed">● Closed</span><span class="h-dist">3.4 km</span><button class="dir-btn">🗺 Directions</button></div>
+                </div>
+              </div>
+              <button class="btn-g btn-r" style="margin-top:8px;font-size:15px;padding:15px;">🆘 Still need help? Re-alert</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Hospital Finder</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ RECEIPT ══════════════════════════ -->
+<section id="s-receipt" class="scr">
+  <div class="sh"><div><div class="sh-title">Emergency Receipt</div><div class="sh-sub">Auto-generated · broadcast to group</div></div><div class="sh-tag">Mobile</div></div>
+  <div class="canvas">
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="rc">
+            <div class="rc-head">
+              <span style="color:rgba(255,255,255,0.7);font-size:18px;cursor:pointer;">←</span>
+              <span class="rc-title">Emergency Closed</span>
+              <span style="margin-left:auto;background:rgba(255,255,255,0.2);color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-family:var(--f-mono);">Resolved</span>
+            </div>
+            <div class="rc-body">
+              <div class="rc-hero">
+                <div class="rc-big-label">Total Spent</div>
+                <div class="rc-big">₦14,500</div>
+                <div style="font-size:12px;color:var(--gr);font-family:var(--f-mono);">REF-EMG-0041 · Jun 02, 2026</div>
+              </div>
+              <div class="rc-card">
+                <div class="rc-row"><span class="rc-k">Patient</span><span class="rc-v">Funke Okafor</span></div>
+                <div class="rc-row"><span class="rc-k">Pool</span><span class="rc-v">Kano Solidarity Pool</span></div>
+                <div class="rc-row"><span class="rc-k">Remaining Balance</span><span class="rc-v g">₦33,850</span></div>
+                <div class="rc-row"><span class="rc-k">Protected Floor</span><span class="rc-v"><span style="background:rgba(212,160,23,0.12);color:#8a6700;padding:3px 9px;border-radius:20px;font-size:11.5px;font-family:var(--f-mono);">🔒 ₦3,000</span></span></div>
+              </div>
+              <div style="font-family:var(--f-mono);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--gr);margin-bottom:12px;">Itemized Payments</div>
+              <div class="rc-card">
+                <div class="pay-item"><div><div class="pi-dest">Kabiru Aliyu · Bystander</div><div class="pi-ref">OPY-2026-EMG-904401</div></div><div class="pi-amt">₦8,000</div></div>
+                <div class="pay-item"><div><div class="pi-dest">National Hospital Abuja</div><div class="pi-ref">OPY-2026-EMG-904402</div></div><div class="pi-amt">₦5,000</div></div>
+                <div class="pay-item"><div><div class="pi-dest">Transport</div><div class="pi-ref">OPY-2026-EMG-904403</div></div><div class="pi-amt">₦1,500</div></div>
+              </div>
+              <div class="broadcast-note">✓ Receipt broadcast to all 18 members · 14:32 WAT</div>
+              <button class="btn-g" style="margin-top:12px;background:transparent;color:var(--g);border:1.5px solid rgba(26,107,74,0.3);">Share Receipt PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Emergency Receipt</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ GROUP CREATION ════════════════════ -->
+<section id="s-groupcreate" class="scr">
+  <div class="sh"><div><div class="sh-title">Group Creation</div><div class="sh-sub">3-step pool setup flow</div></div><div class="sh-tag">Mobile</div></div>
+  <div class="canvas">
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="gc">
+            <div class="gc-head">
+              <div class="gc-bg">01</div>
+              <div class="gc-step">Step 1 of 3</div>
+              <div class="gc-title">Pool<br>Details</div>
+              <div class="step-bar"><div class="sb active"></div><div class="sb"></div><div class="sb"></div></div>
+            </div>
+            <div class="gc-body">
+              <div class="fl"><label class="fl-label">Pool Name</label><input class="fi" placeholder="e.g. Kano Solidarity Pool"></div>
+              <div class="fl"><label class="fl-label">Spending Limit per Emergency</label><input class="fi" value="₦15,000" readonly><div style="font-size:11.5px;color:var(--gr);margin-top:5px;">Default cap per event — editable anytime</div></div>
+              <div class="fl"><label class="fl-label">Reserve Floor</label><input class="fi" value="₦3,000" readonly><div style="font-size:11.5px;color:var(--gr);margin-top:5px;">Always protected · cannot be released</div></div>
+              <button class="btn-g" style="margin-top:8px;">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Group Creation — Step 1</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="gc">
+            <div class="gc-head">
+              <div class="gc-bg">02</div>
+              <div class="gc-step">Step 2 of 3</div>
+              <div class="gc-title">Contribution<br>Mode</div>
+              <div class="step-bar"><div class="sb done"></div><div class="sb active"></div><div class="sb"></div></div>
+            </div>
+            <div class="gc-body">
+              <div style="font-size:13px;color:var(--gr);margin-bottom:16px;line-height:1.6;">Choose how members fund the pool. This can be changed later by admins (with a 30-min objection window).</div>
+              <div class="mode-opt sel">
+                <div class="mo-head"><div><div class="mo-title">Passive Sweep</div><span style="background:rgba(24,165,116,0.1);color:var(--g);font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:20px;font-family:var(--f-mono);">Recommended</span></div><div class="radio on"></div></div>
+                <div class="mo-desc">A small ₦100 amount is automatically swept from each OPay transaction. Zero manual effort for members.</div>
+                <div class="fl" style="margin-top:12px;margin-bottom:0;"><label class="fl-label">Sweep Amount</label><input class="fi" value="₦100" readonly></div>
+              </div>
+              <div class="mode-opt">
+                <div class="mo-head"><div class="mo-title">Scheduled Deposit</div><div class="radio"></div></div>
+                <div class="mo-desc">Fixed weekly or monthly deposit. Best for groups with predictable income cycles.</div>
+              </div>
+              <button class="btn-g" style="margin-top:4px;">Next →</button>
+              <button style="width:100%;background:transparent;border:none;color:var(--gr);padding:13px;cursor:pointer;font-family:var(--f-body);font-size:14px;">← Back</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Group Creation — Step 2</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="gc">
+            <div class="gc-head">
+              <div class="gc-bg">03</div>
+              <div class="gc-step">Step 3 of 3</div>
+              <div class="gc-title">Invite<br>Members</div>
+              <div class="step-bar"><div class="sb done"></div><div class="sb done"></div><div class="sb active"></div></div>
+            </div>
+            <div class="gc-body">
+              <div style="display:flex;gap:8px;margin-bottom:16px;">
+                <input class="fi" placeholder="email or phone number" style="flex:1;">
+                <button class="btn-t" style="width:auto;padding:0 18px;flex-shrink:0;border-radius:12px;">Invite</button>
+              </div>
+              <div style="font-size:11px;color:var(--gr);font-family:var(--f-mono);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Pending (2)</div>
+              <div style="background:#fff;border-radius:16px;padding:14px;border:1px solid rgba(0,0,0,0.07);">
+                <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.05);">
+                  <div style="width:36px;height:36px;border-radius:50%;background:var(--l);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--g);font-size:13px;">FK</div>
+                  <div><div style="font-size:13.5px;font-weight:600;color:var(--d);">funke@email.com</div><div style="font-size:11px;color:var(--gr);">Invited just now</div></div>
+                  <div style="margin-left:auto;background:rgba(212,160,23,0.12);color:#8a6700;padding:3px 9px;border-radius:20px;font-size:10.5px;font-family:var(--f-mono);">Pending</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+                  <div style="width:36px;height:36px;border-radius:50%;background:var(--l);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--g);font-size:13px;">KB</div>
+                  <div><div style="font-size:13.5px;font-weight:600;color:var(--d);">kabiru@email.com</div><div style="font-size:11px;color:var(--gr);">Invited 5 min ago</div></div>
+                  <div style="margin-left:auto;background:rgba(212,160,23,0.12);color:#8a6700;padding:3px 9px;border-radius:20px;font-size:10.5px;font-family:var(--f-mono);">Pending</div>
+                </div>
+              </div>
+              <button class="btn-g" style="margin-top:16px;">Create Pool 🎉</button>
+              <button style="width:100%;background:transparent;border:none;color:var(--gr);padding:12px;cursor:pointer;font-family:var(--f-body);font-size:14px;">Skip for now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Group Creation — Step 3</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ MEMBERS ═══════════════════════════ -->
+<section id="s-members" class="scr">
+  <div class="sh"><div><div class="sh-title">Member Management</div><div class="sh-sub">List + invite modal</div></div><div class="sh-tag">Mobile</div></div>
+  <div class="canvas">
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="dash" style="background:var(--w);">
+            <div style="background:var(--d);padding:20px;display:flex;align-items:center;justify-content:space-between;">
+              <div><div style="font-family:var(--f-head);font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.4px;">Pool Members</div><div style="font-size:12px;color:rgba(255,255,255,0.4);font-family:var(--f-mono);margin-top:2px;">Kano Pool · 18 active</div></div>
+              <button style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.15);padding:8px 14px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--f-body);">+ Invite</button>
+            </div>
+            <div style="padding:16px 20px;">
+              <input class="fi" placeholder="🔍  Search members..." style="margin-bottom:16px;">
+              <div style="font-size:10px;color:var(--gr);font-family:var(--f-mono);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;">Admin</div>
+              <div style="background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;border:1px solid rgba(0,0,0,0.06);">
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="width:40px;height:40px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;">WM</div>
+                  <div><div style="font-size:14px;font-weight:700;color:var(--d);">Wali Medugu</div><div style="font-size:11.5px;color:var(--gr);">Joined Nov 2025</div></div>
+                  <div style="margin-left:auto;background:rgba(24,165,116,0.1);color:var(--g);padding:3px 9px;border-radius:20px;font-size:10.5px;font-family:var(--f-mono);">Admin</div>
+                </div>
+              </div>
+              <div style="font-size:10px;color:var(--gr);font-family:var(--f-mono);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;">Members (17)</div>
+              <div style="background:#fff;border-radius:16px;padding:14px;border:1px solid rgba(0,0,0,0.06);">
+                <div class="txn"><div class="txn-av">FO</div><div><div class="txn-n">Funke Okafor</div><div class="txn-ref">Joined Jan 2026</div></div><div style="margin-left:auto;background:rgba(0,0,0,0.05);color:var(--gr);padding:3px 9px;border-radius:20px;font-size:10.5px;font-family:var(--f-mono);">Member</div></div>
+                <div class="txn"><div class="txn-av">KA</div><div><div class="txn-n">Kabiru Aliyu</div><div class="txn-ref">Joined Jan 2026</div></div><div style="margin-left:auto;background:rgba(0,0,0,0.05);color:var(--gr);padding:3px 9px;border-radius:20px;font-size:10.5px;font-family:var(--f-mono);">Member</div></div>
+                <div class="txn"><div class="txn-av">ZB</div><div><div class="txn-n">Zainab Bala</div><div class="txn-ref">Invited 2 days ago</div></div><div style="margin-left:auto;background:rgba(212,160,23,0.12);color:#8a6700;padding:3px 9px;border-radius:20px;font-size:10.5px;font-family:var(--f-mono);">Pending</div></div>
+                <div style="text-align:center;padding:12px 0 4px;font-size:12.5px;color:var(--t);font-weight:600;cursor:pointer;">View all 17 →</div>
+              </div>
+            </div>
+            <div class="bnav"><div class="bn"><em>🏠</em>Home</div><div class="bn"><em>🩺</em>Profile</div><div class="bn on"><em>👥</em>Members</div><div class="bn"><em>⚙️</em>More</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Members</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ ADMIN ════════════════════════════ -->
+<section id="s-admin" class="scr">
+  <div class="sh"><div><div class="sh-title">Admin Settings</div><div class="sh-sub">Mode toggle · pending banner · pool config</div></div><div class="sh-tag">Mobile</div></div>
+  <div class="canvas">
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="dash" style="background:var(--w);">
+            <div style="background:var(--d);padding:20px;">
+              <div style="font-family:var(--f-head);font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.4px;">Admin Settings</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.4);font-family:var(--f-mono);margin-top:2px;">Kano Solidarity Pool</div>
+            </div>
+            <div style="padding:16px 20px;">
+              <div class="pending-banner">
+                <div style="font-size:20px;flex-shrink:0;">⏳</div>
+                <div><div style="font-weight:700;font-size:13.5px;color:#8a6700;">Mode Change Pending</div><div style="font-size:13px;color:#8a6700;margin-top:3px;line-height:1.5;">Switching Passive → Scheduled. Members may object within the window.</div><div class="pb-timer">⏱ 24m 38s remaining</div><div style="display:flex;gap:8px;margin-top:10px;"><button style="background:var(--t);color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f-body);">Proceed</button><button style="background:var(--r);color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f-body);">Cancel</button></div></div>
+              </div>
+              <div style="background:#fff;border-radius:16px;padding:18px;margin-bottom:12px;border:1px solid rgba(0,0,0,0.07);">
+                <div style="font-family:var(--f-head);font-size:14px;font-weight:700;color:var(--d);margin-bottom:14px;">Contribution Mode</div>
+                <div class="hr"><div><div class="hr-k">Current Mode</div><div class="hr-v" style="margin-top:2px;">Passive · ₦100/txn</div></div><span style="background:rgba(24,165,116,0.1);color:var(--g);padding:3px 9px;border-radius:20px;font-size:10.5px;font-family:var(--f-mono);">Active</span></div>
+                <button class="btn-g" style="margin-top:14px;background:transparent;color:var(--g);border:1.5px solid rgba(26,107,74,0.3);font-size:14px;padding:13px;">Request Mode Change</button>
+                <div style="font-size:11px;color:var(--gr);text-align:center;margin-top:8px;">Opens 30-min objection window</div>
+              </div>
+              <div style="background:#fff;border-radius:16px;padding:18px;margin-bottom:12px;border:1px solid rgba(0,0,0,0.07);">
+                <div style="font-family:var(--f-head);font-size:14px;font-weight:700;color:var(--d);margin-bottom:14px;">Pool Limits</div>
+                <div class="hr"><span class="hr-k">Spending Limit</span><span class="hr-v">₦15,000 / emergency</span></div>
+                <div class="hr"><span class="hr-k">Reserve Floor</span><span class="hr-v">₦3,000 🔒</span></div>
+                <div class="hr"><span class="hr-k">Active Members</span><span class="hr-v">18</span></div>
+                <button class="btn-g" style="margin-top:14px;background:transparent;color:var(--g);border:1.5px solid rgba(26,107,74,0.3);font-size:14px;padding:13px;">Edit Limits</button>
+              </div>
+              <div style="background:#fff;border-radius:16px;padding:18px;border:1px solid rgba(192,57,43,0.15);">
+                <div style="font-family:var(--f-head);font-size:14px;font-weight:700;color:var(--r);margin-bottom:10px;">Danger Zone</div>
+                <div style="font-size:13px;color:var(--gr);margin-bottom:14px;">These actions cannot be undone.</div>
+                <button style="width:100%;background:transparent;border:1.5px solid rgba(192,57,43,0.25);color:var(--r);padding:13px;border-radius:12px;font-family:var(--f-head);font-size:14px;font-weight:700;cursor:pointer;">⚠ Dissolve Pool</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Admin Settings</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ SISTER VIEW ══════════════════════ -->
+<section id="s-sister" class="scr">
+  <div class="sh"><div><div class="sh-title">Sister View — Web Portal</div><div class="sh-sub">Password-less emergency contact portal</div></div><div class="sh-tag">Web Only</div></div>
+  <div style="padding:32px;">
+    <div class="webframe">
+      <div class="wbar"><div class="wdots"><div class="wd r"></div><div class="wd y"></div><div class="wd g"></div></div><div class="wurl">vita.ng/emergency/LINK-K9X-0041-FUNKE</div></div>
+      <div class="sv">
+        <div class="sv-nav">
+          <div class="sv-logo"><div class="lm">V</div>VITA</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.45);">Secure · One-time access</div>
+          <div class="sv-emg">🚨 EMERGENCY ACTIVE</div>
+        </div>
+        <div class="sv-hero">
+          <div class="sv-patient-line">
+            <div class="sv-av">FO</div>
+            <div>
+              <div class="sv-pname">Funke Okafor</div>
+              <div class="sv-meta">Emergency triggered near <strong>Wuse 2, Abuja</strong> · Jun 02, 2026 at 14:18 WAT</div>
+            </div>
+            <div style="margin-left:auto;text-align:right;">
+              <div style="font-size:12px;color:var(--gr);">Bystander GPS</div>
+              <div style="font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--d);margin-top:2px;">9.0579° N, 7.4951° E</div>
+              <a href="#" style="font-size:12.5px;color:var(--t);font-weight:600;text-decoration:none;">Open Maps →</a>
+            </div>
+          </div>
+        </div>
+        <div class="sv-grid">
+          <div class="sv-card">
+            <div class="sv-card-title">🩺 Patient Health Profile</div>
+            <div class="sv-row"><span class="sv-k">Blood Type</span><span style="font-family:var(--f-head);font-size:16px;font-weight:700;background:#FEF0EF;color:var(--r);padding:4px 12px;border-radius:8px;">A−</span></div>
+            <div class="sv-row"><span class="sv-k">Conditions</span><div style="display:flex;gap:6px;flex-wrap:wrap;"><span style="background:rgba(0,0,0,0.06);color:var(--d);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:500;">Type 2 Diabetes</span><span style="background:rgba(0,0,0,0.06);color:var(--d);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:500;">Hypertension</span></div></div>
+            <div class="sv-row"><span class="sv-k">⚠ Allergies</span><div style="display:flex;gap:6px;flex-wrap:wrap;"><span style="background:#FEF0EF;color:var(--r);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;">Aspirin</span><span style="background:#FEF0EF;color:var(--r);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;">Sulfa drugs</span></div></div>
+          </div>
+          <div class="sv-card">
+            <div class="sv-card-title">🏦 Release VitaPool Funds</div>
+            <div class="sv-balance-label">Available Balance</div>
+            <div class="sv-balance">₦48,350</div>
+            <div class="floor-box">🔒 <strong>Protected floor:</strong> ₦3,000 cannot be released. Max releasable: <strong>₦45,350</strong></div>
+            <div class="release-input-wrap"><span class="ri-pre">₦</span><input class="ri" value="8,000" readonly></div>
+            <div style="font-size:12px;color:var(--gr);margin-bottom:14px;">Goes directly to bystander's OPay wallet</div>
+            <button class="release-btn">Release ₦8,000 →</button>
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(0,0,0,0.07);">
+              <div style="font-size:11px;color:var(--gr);font-family:var(--f-mono);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Previous releases</div>
+              <div class="txn"><div class="txn-av" style="width:34px;height:34px;font-size:12px;">KB</div><div><div class="txn-n" style="font-size:13px;">Kabiru · Bystander</div><div class="txn-ref">OPY-2026-EMG-904401</div></div><div class="txn-r"><div class="txn-amt">₦5,000</div><div class="txn-t">12 min ago</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ SMS / VITAVOICE ══════════════════ -->
+<section id="s-sms" class="scr">
+  <div class="sh"><div><div class="sh-title">VitaVoice SMS + Emergency Alert</div><div class="sh-sub">Out-of-app touchpoints</div></div><div class="sh-tag">SMS</div></div>
+  <div class="canvas">
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="sms-screen">
+            <div class="sms-bar"><div class="sms-av">V</div><div><div class="sms-name">VitaVoice</div><div class="sms-num">+234 700 VITA 001</div></div><span style="margin-left:auto;background:rgba(24,165,116,0.1);color:var(--g);padding:3px 9px;border-radius:20px;font-size:10.5px;font-family:var(--f-mono);">AI Bot</span></div>
+            <div class="sms-list">
+              <div class="bubble in"><div class="btext">Sannu! Welcome to VitaVoice 🌱 How can I help?<br><br>1 - Register<br>2 - Check pool balance<br>3 - Report emergency<br>4 - Change language</div><div class="btime">10:02 AM</div></div>
+              <div class="bubble out"><div class="btext">2</div><div class="btime">10:04 AM</div></div>
+              <div class="bubble in"><div class="btext">Your VitaPool balance na ₦48,350 today. Reserved floor na ₦3,000 wey no fit release. Max releasable: ₦45,350.<br><br>Reply 3 to report emergency.</div><div class="btime">10:04 AM</div></div>
+              <div class="bubble out"><div class="btext">3</div><div class="btime">10:06 AM</div></div>
+              <div class="bubble in"><div class="btext">⚠️ Emergency activated! Contacts don receive SMS with your GPS link. Nearest hospital: National Hospital Abuja (1.2km). Calling Fatima now... 📞</div><div class="btime">10:06 AM</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">VitaVoice — Pidgin SMS Bot</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="sms-screen">
+            <div class="sms-bar"><div class="sms-av" style="background:var(--r);">🚨</div><div><div class="sms-name">VITA Emergency Alert</div><div class="sms-num">+234 700 VITA 001</div></div></div>
+            <div class="sms-list">
+              <div class="bubble in"><div class="btext" style="background:#FEF0EF;color:var(--r);">🚨 <strong>VITA EMERGENCY</strong><br><br>Funke Okafor has been found in an emergency near Wuse 2, Abuja by bystander Kabiru Aliyu.<br><br>Jun 02, 2026 · 14:18 WAT</div><div class="btime">2:18 PM</div></div>
+              <div class="link-preview"><div class="lp-url">vita.ng/emergency/LINK-K9X-0041-FUNKE</div><div class="lp-title">🔐 VITA Emergency Portal</div><div class="lp-sub">View health profile, GPS &amp; release VitaPool funds</div></div>
+              <div class="bubble in"><div class="btext">Tap the secure link to open VITA — no app or password needed. Release funds to the bystander's OPay wallet directly.</div><div class="btime">2:18 PM</div></div>
+              <div class="bubble out"><div class="btext">Opened the link, releasing ₦8,000 now 🙏</div><div class="btime">2:22 PM</div></div>
+              <div class="bubble in"><div class="btext">✅ ₦8,000 released to Kabiru Aliyu (OPY-2026-EMG-904401). Pool updated. All 18 members notified.</div><div class="btime">2:23 PM</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Emergency Alert SMS</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ EMPTY STATES ═════════════════════ -->
+<section id="s-empty" class="scr">
+  <div class="sh"><div><div class="sh-title">Empty States</div><div class="sh-sub">No pool · no transactions · no profile</div></div><div class="sh-tag">States</div></div>
+  <div class="canvas">
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="dash">
+            <div class="dash-top">
+              <div class="dt-row"><div><div class="dt-greet">WELCOME</div><div style="font-family:var(--f-head);font-size:19px;font-weight:700;color:#fff;">New User</div></div><div class="dt-icons"><div class="dt-ic">🔔</div></div></div>
+              <div class="pool-card" style="opacity:0.5;border:2px dashed rgba(255,255,255,0.2);background:transparent;">
+                <div class="pc-eyebrow">No Pool Linked</div>
+                <div class="pc-amount" style="font-size:32px;">₦0.00</div>
+              </div>
+            </div>
+            <div class="dash-body">
+              <div class="dashed-card" style="margin:0 0 20px;">
+                <div style="font-size:40px;margin-bottom:12px;">🏦</div>
+                <div style="font-family:var(--f-head);font-size:18px;font-weight:700;color:var(--d);margin-bottom:8px;">Create your VitaPool</div>
+                <div style="font-size:13.5px;color:var(--gr);margin-bottom:18px;line-height:1.6;">Start a community health fund or join one with an invite code.</div>
+                <button class="btn-g" style="padding:13px;">Create Pool</button>
+                <button style="width:100%;margin-top:8px;background:transparent;border:1.5px solid rgba(0,0,0,0.1);color:var(--d);padding:12px;border-radius:12px;font-family:var(--f-head);font-size:14px;font-weight:600;cursor:pointer;">Enter Invite Code</button>
+              </div>
+              <div class="empty-state">
+                <div class="es-icon-wrap">📭</div>
+                <div class="es-title">No transactions yet</div>
+                <div class="es-sub">Contributions will appear here in real time once your pool is live.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Empty — No Pool</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="hp">
+            <div class="hp-head">
+              <div class="hp-av" style="background:rgba(255,255,255,0.1);font-size:32px;">👤</div>
+              <div class="hp-name">No Profile Set</div>
+              <div class="hp-email">Complete your health profile to enroll</div>
+            </div>
+            <div style="padding:32px 24px;text-align:center;">
+              <div style="width:100px;height:100px;border-radius:50%;background:var(--l);display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 20px;">🩺</div>
+              <div style="font-family:var(--f-head);font-size:22px;font-weight:700;color:var(--d);margin-bottom:10px;letter-spacing:-0.5px;">Set up your health<br>profile</div>
+              <div style="font-size:13.5px;color:var(--gr);line-height:1.6;margin-bottom:28px;">Your blood type, allergies, and emergency contacts will be written to your VitaCard for offline access.</div>
+              <button class="btn-g">Complete Profile →</button>
+              <div style="margin-top:14px;font-size:12px;color:var(--gr);">Takes about 3 minutes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Empty — No Health Profile</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ LOADING ════════════════════════════ -->
+<section id="s-loading" class="scr">
+  <div class="sh"><div><div class="sh-title">Loading States</div><div class="sh-sub">Skeleton · spinner · NFC progress</div></div><div class="sh-tag">States</div></div>
+  <div class="canvas">
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="dash">
+            <div class="dash-top">
+              <div class="dt-bg">VITA</div>
+              <div class="dt-row">
+                <div><div class="sk-dark" style="width:80px;height:12px;margin-bottom:6px;"></div><div class="sk-dark" style="width:140px;height:20px;"></div></div>
+                <div class="dt-icons"><div class="dt-ic"></div></div>
+              </div>
+              <div class="pool-card" style="background:rgba(0,0,0,0.15);">
+                <div class="sk-dark" style="width:100px;height:12px;margin-bottom:10px;"></div>
+                <div class="sk-dark" style="width:160px;height:36px;margin-bottom:12px;"></div>
+                <div class="sk-dark" style="width:140px;height:22px;"></div>
+              </div>
+            </div>
+            <div class="dash-body">
+              <div class="qg">
+                <div style="border-radius:16px;padding:16px;border:1px solid rgba(0,0,0,0.06);background:#fff;"><div class="sk" style="width:28px;height:28px;border-radius:50%;margin-bottom:10px;"></div><div class="sk" style="width:70%;height:13px;margin-bottom:6px;"></div><div class="sk" style="width:50%;height:10px;"></div></div>
+                <div style="border-radius:16px;padding:16px;border:1px solid rgba(0,0,0,0.06);background:#fff;"><div class="sk" style="width:28px;height:28px;border-radius:50%;margin-bottom:10px;"></div><div class="sk" style="width:70%;height:13px;margin-bottom:6px;"></div><div class="sk" style="width:50%;height:10px;"></div></div>
+              </div>
+              <div class="sk" style="width:80px;height:12px;margin-bottom:16px;"></div>
+              <div class="txn"><div class="sk" style="width:40px;height:40px;border-radius:50%;flex-shrink:0;"></div><div style="flex:1;"><div class="sk" style="width:80%;height:13px;margin-bottom:6px;"></div><div class="sk" style="width:55%;height:10px;"></div></div><div><div class="sk" style="width:50px;height:13px;margin-bottom:6px;"></div><div class="sk" style="width:40px;height:10px;"></div></div></div>
+              <div class="txn"><div class="sk" style="width:40px;height:40px;border-radius:50%;flex-shrink:0;"></div><div style="flex:1;"><div class="sk" style="width:65%;height:13px;margin-bottom:6px;"></div><div class="sk" style="width:45%;height:10px;"></div></div><div><div class="sk" style="width:50px;height:13px;"></div></div></div>
+              <div class="txn"><div class="sk" style="width:40px;height:40px;border-radius:50%;flex-shrink:0;"></div><div style="flex:1;"><div class="sk" style="width:72%;height:13px;margin-bottom:6px;"></div><div class="sk" style="width:40%;height:10px;"></div></div><div><div class="sk" style="width:50px;height:13px;"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Dashboard — Skeleton</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="nfc-screen" style="align-items:center;justify-content:center;">
+            <div style="text-align:center;padding:40px 24px;position:relative;z-index:1;">
+              <div class="spin" style="margin:0 auto 24px;"></div>
+              <div class="nfc-t">Writing to Card…</div>
+              <div class="nfc-s" style="margin-bottom:28px;">Keep your phone near the VitaCard sticker. Don't move it.</div>
+              <div style="width:100%;background:rgba(255,255,255,0.1);border-radius:20px;height:5px;overflow:hidden;"><div style="width:68%;height:100%;background:var(--t);border-radius:20px;"></div></div>
+              <div style="font-family:var(--f-mono);font-size:11px;color:rgba(255,255,255,0.3);margin-top:8px;">68% · 168 bytes written</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">NFC Writing Progress</div>
+    </div>
+
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps">
+          <div class="nr">
+            <div class="nr-head">
+              <div class="nr-hrow"><div class="back-btn" style="background:rgba(255,255,255,0.08);">←</div><div style="flex:1;"><div class="sk-dark" style="width:120px;height:12px;margin-bottom:6px;"></div><div class="sk-dark" style="width:80px;height:10px;"></div></div></div>
+              <div class="sk-dark" style="width:80%;height:28px;margin-bottom:6px;"></div>
+              <div class="sk-dark" style="width:50%;height:11px;"></div>
+            </div>
+            <div class="nr-body">
+              <div style="margin-bottom:14px;"><div class="sk" style="width:80px;height:11px;margin-bottom:8px;"></div><div style="display:flex;gap:6px;"><div class="sk" style="width:80px;height:28px;border-radius:20px;"></div><div class="sk" style="width:90px;height:28px;border-radius:20px;"></div></div></div>
+              <div class="fa-card">
+                <div class="fa-title">🤖 Generating first aid…</div>
+                <div class="sk" style="width:100%;height:13px;margin-bottom:8px;"></div>
+                <div class="sk" style="width:90%;height:13px;margin-bottom:8px;"></div>
+                <div class="sk" style="width:95%;height:13px;margin-bottom:8px;"></div>
+                <div class="sk" style="width:75%;height:13px;margin-bottom:8px;"></div>
+                <div class="sk" style="width:80%;height:13px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">Gemini First Aid — Generating</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════ TOASTS ════════════════════════════ -->
+<section id="s-toasts" class="scr">
+  <div class="sh"><div><div class="sh-title">Toast Notifications</div><div class="sh-sub">All 4 VITA-branded types</div></div><div class="sh-tag">States</div></div>
+  <div class="canvas">
+    <div>
+      <div class="phone">
+        <div class="notch"><div class="notch-bar"></div></div>
+        <div class="ps" style="background:var(--w);">
+          <div style="background:var(--d);padding:20px;"><span style="font-family:var(--f-head);font-size:18px;font-weight:700;color:#fff;">Notifications</span></div>
+          <div class="toast-list">
+            <div class="toast t-success"><div class="ti">✅</div><div><div class="tm">Health profile saved</div><div class="ts">VitaCard is ready to write</div></div><div class="tx">✕</div></div>
+            <div class="toast t-success"><div class="ti">📲</div><div><div class="tm">VitaCard written successfully</div><div class="ts">Tap card anytime for offline access</div></div><div class="tx">✕</div></div>
+            <div class="toast t-error"><div class="ti">❌</div><div><div class="tm">Payment failed (400)</div><div class="ts">Insufficient OPay balance</div></div><div class="tx">✕</div></div>
+            <div class="toast t-error"><div class="ti">🚫</div><div><div class="tm">Access denied (403)</div><div class="ts">Only pool admins can change this</div></div><div class="tx">✕</div></div>
+            <div class="toast t-warn"><div class="ti">⏳</div><div><div class="tm" style="color:var(--d);">Mode change pending</div><div class="ts" style="color:var(--d);">24 min remaining for objections</div></div><div class="tx" style="color:var(--d);">✕</div></div>
+            <div class="toast t-warn"><div class="ti">🔒</div><div><div class="tm" style="color:var(--d);">Reserve floor reached</div><div class="ts" style="color:var(--d);">₦3,000 minimum locked</div></div><div class="tx" style="color:var(--d);">✕</div></div>
+            <div class="toast t-info"><div class="ti">💬</div><div><div class="tm">Receipt broadcast</div><div class="ts">All 18 members notified</div></div><div class="tx">✕</div></div>
+            <div class="toast t-info"><div class="ti">📍</div><div><div class="tm">GPS location captured</div><div class="ts">Sharing with emergency contacts</div></div><div class="tx">✕</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">All Toast Types</div>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+function go(id, el){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById('s-'+id).classList.add('on');
+  el.classList.add('on');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
