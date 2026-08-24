@@ -1,0 +1,70 @@
+# Vita — Memory Log
+
+## Vercel Deployment Configuration
+- Initialized Vercel deployment configuration at the project root.
+- Created `build.sh` script to clone and set up the Flutter SDK (depth 1, stable branch) and compile the Flutter web application inside `/vita`.
+- Created `vercel.json` to define the custom build command (`bash build.sh`), specify the output directory (`vita/build/web`), and handle clean routing (rewrites targeting `index.html`) for `go_router` deep-linking.
+- Verified that local Flutter web builds compile successfully with no lint or build errors.
+
+## Git Diffs
+
+```diff
+diff --git a/build.sh b/build.sh
+new file mode 100644
+index 0000000..793fe96
+--- /dev/null
++++ b/build.sh
+@@ -0,0 +1,35 @@
++#!/bin/bash
++
++# Exit on error
++set -e
++
++echo "=== Vercel Flutter Web Build Start ==="
++
++# Check if flutter directory is cached/present
++if [ ! -d "flutter" ]; then
++  echo "=== Downloading Flutter SDK (stable channel) ==="
++  git clone https://github.com/flutter/flutter.git -b stable --depth 1
++else
++  echo "=== Flutter SDK cached, updating... ==="
++  cd flutter
++  git fetch --depth 1
++  git checkout stable
++  git pull origin stable
++  cd ..
++fi
++
++# Add Flutter to the path
++export PATH="$PATH:$(pwd)/flutter/bin"
++
++echo "=== Running Flutter doctor ==="
++flutter doctor -v
++
++echo "=== Configuring Web Support ==="
++flutter config --enable-web
++
++echo "=== Building Flutter Web Application ==="
++cd vita
++flutter pub get
++flutter build web --release
++
++echo "=== Vercel Flutter Web Build Done! ==="
+diff --git a/vercel.json b/vercel.json
+new file mode 100644
+index 0000000..4987ab5
+--- /dev/null
++++ b/vercel.json
+@@ -0,0 +1,11 @@
++{
++  "version": 2,
++  "buildCommand": "bash build.sh",
++  "outputDirectory": "vita/build/web",
++  "rewrites": [
++    {
++      "source": "/(.*)",
++      "destination": "/index.html"
++    }
++  ]
++}
+```
