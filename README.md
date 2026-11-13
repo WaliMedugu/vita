@@ -1,473 +1,203 @@
-<div align="center">
+<h1 align="center">VITA</h1>
 
-```
-██╗   ██╗██╗████████╗ █████╗ 
-██║   ██║██║╚══██╔══╝██╔══██╗
-██║   ██║██║   ██║   ███████║
-╚██╗ ██╔╝██║   ██║   ██╔══██║
- ╚████╔╝ ██║   ██║   ██║  ██║
-  ╚═══╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
-```
+<p align="center">
+  <strong>Vital Identity &amp; Trust Alliance</strong><br/>
+  Health identity in your pocket. Community protection in your wallet.
+</p>
 
-### **Vital Identity & Trust Alliance**
+<p align="center">
+  <a href="https://vita-amber.vercel.app"><strong>Live web demo</strong></a> ·
+  OPay | Google National Innovation Challenge 2026 · Healthcare Technology track · Team VITA-NUN, Nile University Abuja
+</p>
 
-*Health identity in your pocket. Community protection in your wallet.*
-
-<br/>
-
-[![Challenge](https://img.shields.io/badge/OPay%20|%20Google-Innovation%20Challenge%202026-1A6B4A?style=for-the-badge&logoColor=white)](https://www.opayweb.com/innovation-challenge)
-[![Track](https://img.shields.io/badge/Track-Healthcare%20Technology-18A574?style=for-the-badge)](/)
-[![Team](https://img.shields.io/badge/Team-VITA--NUN-D4A017?style=for-the-badge)](/)
-[![University](https://img.shields.io/badge/Nile%20University-Abuja-1A1A2E?style=for-the-badge)](/)
-[![Backend](https://img.shields.io/badge/Backend-Python%20%2B%20FastAPI-3776AB?style=for-the-badge&logo=python&logoColor=white)](/)
-[![Frontend](https://img.shields.io/badge/Frontend-Flutter%20Web%20%2B%20Mobile-54C5F8?style=for-the-badge&logo=flutter&logoColor=white)](/)
-[![Database](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](/)
-
-<br/>
-
-</div>
+<p align="center">
+  Flutter (web + mobile) · Python FastAPI · Supabase PostgreSQL · Google Gemini · Africa's Talking
+</p>
 
 ---
 
-## 🚨 The Problem
+## The problem
 
-> *Every day in Nigeria, someone arrives at a hospital unconscious.*
-> *The nurses ask three questions: blood type? allergies? who do we call?*
-> *Nobody knows. Then comes the second problem — who's paying?*
-> *Treatment waits. Sometimes it waits too long.*
+When someone arrives at a hospital in Nigeria unconscious, staff need three answers fast: blood type, allergies, and who to call. Usually nobody knows. Then comes the second problem: who is paying? Most healthcare costs are paid out of pocket, and treatment can wait on payment.
 
-<br/>
+## What it does
 
-| Statistic | Reality |
-|-----------|---------|
-| **75%** | of all healthcare costs paid out of pocket |
-| **< 5%** | of Nigerians actually covered by NHIS in practice |
-| **2.9 / 10,000** | doctor-to-patient ratio — vs WHO minimum of 17 |
-| **85%** | of Primary Healthcare Centres in distress |
-| **133M+** | informal workers with zero health coverage |
-
-<br/>
-
----
-
-## 💡 What VITA Does
-
-VITA is not an app. It is a **three-layer healthcare system** designed around how emergencies actually unfold in Nigeria — an unconscious patient, a panicked stranger, a family member three states away, and a hospital that needs payment before it begins.
-
-<br/>
+VITA is a three-layer system designed around how an emergency actually unfolds: an unconscious patient, a stranger who wants to help, a family member far away, and a hospital that needs payment.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                                                                   │
-│   LAYER 1 — VitaCard          LAYER 2 — VitaPool                │
-│   ──────────────────          ─────────────────────             │
-│   ₦300–500 NFC sticker        Purpose-locked community          │
-│   card. Tap any Android       health fund on OPay.              │
-│   phone. Instantly see        Passive ₦50–100 sweep             │
-│   blood type, allergies,      per transaction. Sends            │
-│   conditions, contacts.       exact bill amount only.           │
-│   Works OFFLINE.              Group sees every naira.           │
-│                                                                   │
-│                 LAYER 3 — VitaVoice                             │
-│                 ────────────────────                            │
-│                 Gemini-powered SMS bot.                         │
-│                 English, Pidgin, Hausa,                         │
-│                 Yoruba, Igbo. No smartphone                     │
-│                 needed. Costs ₦4.                               │
-│                                                                   │
-└─────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────┐
+│  LAYER 1 · VitaCard          LAYER 2 · VitaPool               │
+│  Low-cost NFC sticker card.  Purpose-locked community health  │
+│  Tap with an Android phone   fund. Releases the exact bill    │
+│  to see blood type,          amount only, and every member    │
+│  allergies, conditions and   sees every naira.                │
+│  emergency contacts.                                          │
+│                                                               │
+│                LAYER 3 · VitaVoice                            │
+│                Gemini-assisted SMS bot, so people without a   │
+│                smartphone can register a health profile.      │
+└───────────────────────────────────────────────────────────────┘
 ```
 
-<br/>
-
----
-
-## ⚡ The Emergency Flow
+### The emergency flow (as designed)
 
 ```
-Adaobi collapses at her market stall in Kano
-              │
-              ▼
-    Bystander sees VitaCard
-    "EMERGENCY: Tap this card with any Android phone"
-              │
-              ▼
-    ┌─────────────────────────────────┐
-    │  Blood type: O+                 │
-    │  Allergy: Penicillin ⚠️          │
-    │  Condition: Hypertension        │
-    │  Emergency contact: Sister      │
-    │  ─────────────────────────────  │
-    │  🩺 First Aid (WHO-sourced):    │
-    │  Keep still. Loosen clothing.   │
-    │  Do not give water.             │
-    │  Get to hospital immediately.   │
-    │                                 │
-    │       [ 🚨 EMERGENCY ]          │
-    └─────────────────────────────────┘
-              │
-              ▼
-    App dials sister from bystander's phone
-    Auto-SMS with GPS location fires to sister
-              │
-              ▼
-    App shows 3 nearest open hospitals + directions
-              │
-              ▼
-    Sister sends ₦500 transport now
-    ₦1,000 more releases on arrival confirmation
-              │
-              ▼
-    Bystander gets real bill at hospital: ₦7,500
-    Sister enters ₦7,500 in VITA — sends exactly that
-              │
-         ┌────┴────┐
-         ▼         ▼
-    Hospital      Bystander wallet
-    OPay account  (cash via OPay
-    (if available) agent if needed)
-         │
-         ▼
-    All 12 group members notified in real time
-    Emergency receipt issued on close
-    Remaining pool balance: untouched ✅
+Patient collapses ─▶ Bystander taps the VitaCard with an Android phone
+                          │
+                          ▼
+         Blood type, allergies, conditions, emergency contact
+         + a first-aid card for that patient's conditions
+                          │
+                          ▼
+         [ EMERGENCY ] ─▶ emergency contact is called and gets an SMS
+                          with the location; nearest open hospitals shown
+                          │
+                          ▼
+         Emergency contact releases the exact hospital bill from VitaPool
+                          │
+                          ▼
+         Group members notified · receipt issued when the emergency closes
 ```
 
-<br/>
+## Key features
 
----
+**Flutter app (web dashboard + mobile UI)**
+- Onboarding, sign-in and a dashboard with pool balance and activity feed.
+- Health profile view and editor (blood type, allergies, conditions, contacts).
+- VitaCard NFC write, read and result screens, with a simulated tap for the demo.
+- Emergency confirmation, nearby hospital finder and emergency receipt screens.
+- Group creation, member list and admin screens for a VitaPool.
+- VitaVoice web screen that simulates the SMS registration conversation.
+- Declarative routing with `go_router`, built to web and deployed on Vercel.
 
-## 🧠 Where Gemini Does the Work
+**FastAPI backend**
+- JWT auth (`/auth/register`, `/auth/login`) with bcrypt password hashing via passlib.
+- Health profiles, including a public `/profile/nfc/{user_id}` view for a card tap.
+- Groups with invites, members and contribution settings; pools with contributions and history.
+- Emergency lifecycle: public `/emergency/trigger` from a card tap with GPS, a signed access token for the emergency contact, fund release that enforces the group's reserve floor, close, and receipt.
+- Gemini endpoints for a condition-specific first-aid card (with a cached fallback) and for turning plain-language or Pidgin descriptions into structured health-profile fields.
+- Africa's Talking `/sms/incoming` webhook that walks a new user through registration by SMS, with English/Pidgin detection.
+- `/hospitals/nearby` using the Google Places API.
+- OPay payment simulation (mock) for releases.
 
-> **Our rule: AI is used only where it cannot be replaced by any other approach at scale.**
-
-<br/>
-
-| Application | What Gemini does | Why nothing else works |
-|-------------|-----------------|----------------------|
-| **Health profile building** | Converts *"I get sugar, my blood dey high"* → `Type 2 Diabetes + Hypertension` | No human team serves millions across 5 languages at ₦4/session |
-| **First aid card** | Surfaces WHO-grounded guidance for the patient's exact condition combination | Static scripts can't handle thousands of possible condition combinations |
-| **VitaVoice SMS** | Navigates dialect switching, ambiguity, maps answers to clinical fields over SMS | No fixed script handles language variation at population scale |
-| **Fraud detection** | Cross-references emergency claims against transaction behaviour before release | Rule-based logic is gameable; pattern recognition requires ML |
-| **Contribution optimisation** | Personalises passive sweep so it never causes overdrafts | A fixed ₦100 is painless for some, harmful for others |
-
-<br/>
-
----
-
-## 🛡️ Community Governance
-
-VitaPool belongs to the group — not just the person in crisis.
-
-- 👁️ **Full transparency** — every member sees every transaction in real time via Supabase subscriptions
-- 🔒 **Spending limits** — group admin sets a cap; breaches trigger a 30-minute group notification window
-- 💰 **Exact amounts only** — emergency contact sends the real bill, nothing more, no overpayment
-- 🚕 **Staged transport** — ₦500 upfront, ₦1,000 on GPS-confirmed hospital arrival
-- 🏦 **Reserve floor** — last ₦3,000 always protected; pool never empties completely
-- 📄 **Emergency receipt** — full summary sent to all members when emergency closes
-- ⚖️ **Dispute window** — any member can raise a dispute within 7 days, resolved by group vote
-- 📞 **Fallback contact** — if primary contact unreachable for 5 minutes, group admin takes over
-
-<br/>
-
----
-
-## 🏗️ Architecture
-
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                          VITA System                              │
-│                                                                    │
-│         One Flutter app — compiles to web AND mobile              │
-│                                                                    │
-│  ┌──────────────────────────────────────────────────────────┐    │
-│  │                   Flutter App (Wali)                      │    │
-│  │                                                           │    │
-│  │   flutter build web  →  Web Dashboard (Vercel)           │    │
-│  │   flutter build apk  →  Android NFC App (demo phone)     │    │
-│  │                                                           │    │
-│  │   NFC screens active on mobile only (kIsWeb check)       │    │
-│  └──────────────────────────┬────────────────────────────────┘   │
-│                             │  HTTP / REST                        │
-│                             ▼                                      │
-│  ┌──────────────────────────────────────────────────────────┐    │
-│  │               Python FastAPI Backend (me)                │    │
-│  │                      (Render)                             │    │
-│  └───┬──────────────┬──────────────┬────────────────────────┘    │
-│      │              │              │                               │
-│      ▼              ▼              ▼                               │
-│  Supabase      Gemini API    Africa's Talking                     │
-│  PostgreSQL    (profile,     SMS / USSD                           │
-│  + Realtime    first aid,                                         │
-│  subscriptions fraud, bot)                                        │
-│      │                            │                               │
-│      ▼                            ▼                               │
-│  OPay Mock              Google Places API                         │
-│  Webhook                (hospital finder)                         │
-│                                                                    │
-│  Physical: NTAG213 NFC sticker tags (₦300–500)                   │
-└──────────────────────────────────────────────────────────────────┘
-```
-
-<br/>
-
----
-
-## 🛠️ Tech Stack
-
-<div align="center">
+## Tech stack
 
 | Layer | Technology |
-|-------|-----------|
-| **Frontend — Web Dashboard** | Flutter Web · Vercel |
-| **Frontend — Mobile NFC App** | Flutter Android · nfc_manager |
-| **Single Codebase** | One Flutter app — `flutter build web` / `flutter build apk` |
-| **Backend** | Python · FastAPI · Render |
-| **Database** | Supabase (PostgreSQL) · SQLAlchemy ORM |
-| **Real-time** | Supabase Realtime subscriptions |
-| **Auth** | FastAPI JWT · python-jose · passlib |
-| **AI / Language** | Google Gemini API · google-generativeai |
-| **SMS / USSD** | Africa's Talking Python SDK |
-| **Payments** | OPay Payment Simulation (mock webhook) |
-| **Hospital Finder** | Google Places API |
-| **NFC Hardware** | NTAG213 sticker tags (₦300–500 each) |
+|---|---|
+| Frontend | Flutter (Dart 3), `go_router`, `google_fonts`; one codebase for web and Android |
+| Web hosting | Vercel (`vercel.json` + `build.sh` install Flutter and run `flutter build web`) |
+| Backend | Python, FastAPI, Uvicorn, Pydantic |
+| Database | Supabase PostgreSQL, SQLAlchemy |
+| Auth | JWT (`python-jose`), `passlib[bcrypt]` |
+| AI | Google Gemini (`google-generativeai`, `gemini-2.0-flash`) |
+| SMS | Africa's Talking |
+| Maps | Google Places API |
+| Payments | OPay simulation (mock) |
+| Tests | pytest |
 
-</div>
+## Architecture
 
-<br/>
-
----
-
-## 🗂️ Repo Structure
+```
+┌──────────────────────────────────────────────────────────────┐
+│  Flutter app (vita/)                                         │
+│    flutter build web  →  web dashboard (Vercel)              │
+│    flutter build apk  →  Android app                         │
+└───────────────────────────┬──────────────────────────────────┘
+                            │ HTTP / REST
+                            ▼
+┌──────────────────────────────────────────────────────────────┐
+│  FastAPI backend (backend/)                                  │
+│  auth · profile · groups · pool · emergency · gemini ·       │
+│  sms · hospitals                                             │
+└──┬──────────────┬──────────────┬──────────────┬──────────────┘
+   ▼              ▼              ▼              ▼
+Supabase      Gemini API    Africa's Talking  Google Places
+PostgreSQL                  SMS               (hospital finder)
+   │
+   ▼
+OPay mock (fund release)
+```
 
 ```
 .
-├── README.md
-├── app/                              # Flutter — web + mobile (Wali)
-│   └── (Flutter project files)
-└── backend/
-  ├── README.md
-  ├── requirements.txt
-  └── app/
-    ├── __init__.py
-    ├── config.py
-    ├── database.py
-    ├── main.py
-    ├── models/
-    │   ├── __init__.py
-    │   ├── emergency.py
-    │   ├── group.py
-    │   ├── member.py
-    │   ├── pool.py
-    │   ├── profile.py
-    │   ├── sms_registration.py
-    │   ├── transaction.py
-    │   └── user.py
-    ├── routes/
-    │   ├── __init__.py
-    │   ├── auth.py
-    │   ├── emergency.py
-    │   ├── gemini.py
-    │   ├── hospitals.py
-    │   ├── pool.py
-    │   ├── profile.py
-    │   └── sms.py
-    ├── schemas/
-    │   ├── __init__.py
-    │   ├── auth.py
-    │   ├── emergency.py
-    │   ├── hospital.py
-    │   ├── pool.py
-    │   └── profile.py
-    ├── utils/
-    │   ├── __init__.py
-    │   ├── auth.py
-    │   ├── notifications.py
-    │   ├── opay_mock.py
-    │   └── sweep.py
-    └── tests/
-      ├── __init__.py
-      ├── test_auth.py
-      ├── test_emergency.py
-      └── test_pool.py
-
+├── vita/            Flutter app (lib/screens, lib/widgets, lib/router, lib/theme)
+├── backend/         FastAPI app (app/routes, app/models, app/schemas, app/utils, tests/)
+├── Docs/            Concept note and backend briefs (PDF)
+├── VITA BUILD PLAN.pdf, VITA CONCEPT NOTE.pdf, VITA DATABASE ARCHITECTURE.pdf
+├── vercel.json      Vercel config for the Flutter web build
+└── build.sh         Installs Flutter and builds vita/ for the web
 ```
 
-<br/>
-
----
-
-## 🚀 Getting Started
+## Getting started
 
 ### Prerequisites
-- Python 3.11+
-- Flutter 3.19+ (stable channel)
-- Android device with NFC (for mobile testing)
-- Supabase project (free at supabase.com)
-- Google Gemini API key (free tier)
-- Africa's Talking account (free sandbox)
 
-### Backend Setup
+- Python 3.11+
+- Flutter (stable channel)
+- A Supabase project, a Google Gemini API key, a Google Places API key and an Africa's Talking sandbox account
+
+### Backend
 
 ```bash
-# Clone the repo
-git clone https://github.com/vita-nun/vita.git
+git clone https://github.com/WaliMedugu/vita.git
 cd vita/backend
 
-# Create virtual environment
 python -m venv venv
 source venv/bin/activate        # Windows: venv\Scripts\activate
-
-# Install dependencies
 pip install -r requirements.txt
 
-# Configure environment
-cp .env.example .env            # Fill in your keys
+cp .env.example .env            # fill in your keys
+uvicorn app.main:app --reload   # API docs at http://localhost:8000/docs
 
-# Run the server
-uvicorn app.main:app --reload
-# API docs at http://localhost:8000/docs
+pytest                          # backend tests
 ```
 
-### Flutter App Setup
-
-```bash
-cd ../app
-
-# Install dependencies
-flutter pub get
-
-# Run as web (dashboard)
-flutter run -d chrome
-
-# Run as mobile (NFC)
-flutter run -d <your-android-device-id>
-
-# Build for deployment
-flutter build web          # → web dashboard
-flutter build apk          # → Android APK
-```
-
-### Environment Variables
+Environment variables read by `backend/app/config.py` (`backend/.env`):
 
 ```env
-# backend/.env
-
-# Supabase
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_KEY=your_anon_key
-DATABASE_URL=postgresql://postgres:password@db.your-project.supabase.co:5432/postgres
-
-# Google
-GEMINI_API_KEY=your_gemini_key
-GOOGLE_PLACES_API_KEY=your_places_key
-
-# Africa's Talking
-AT_API_KEY=your_key
+SUPABASE_URL=
+SUPABASE_KEY=
+DATABASE_URL=
+SUPABASE_JWT_SECRET=            # used to sign JWTs (.env.example still lists JWT_SECRET)
+GEMINI_API_KEY=
+GOOGLE_PLACES_API_KEY=
+AT_API_KEY=
 AT_USERNAME=sandbox
-
-# Auth
-JWT_SECRET=your_secret_key_here
+FRONTEND_URL=
 JWT_ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
-
-# OPay (mock in development)
 OPAY_MOCK=true
 ```
 
-### Flutter Dependencies
+### Flutter app
 
-```yaml
-# app/pubspec.yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  nfc_manager: ^3.3.0          # NFC read/write (mobile only)
-  http: ^1.2.0                 # API calls to FastAPI
-  geolocator: ^12.0.0          # GPS for hospital finder
-  url_launcher: ^6.3.0         # Native phone call intent
-  supabase_flutter: ^2.5.0     # Realtime group notifications
-  flutter_dotenv: ^5.1.0       # Environment variables
+```bash
+cd vita                         # from the repo root
+flutter pub get
+
+flutter run -d chrome           # web dashboard
+flutter run -d <android-device> # mobile
+
+flutter build web               # what Vercel deploys
+flutter build apk
 ```
 
-### Backend Dependencies
+## Project status
 
-```txt
-# backend/requirements.txt
-fastapi
-uvicorn[standard]
-sqlalchemy
-supabase
-python-jose[cryptography]
-passlib[bcrypt]
-python-dotenv
-google-generativeai
-africastalking
-httpx
-pydantic
-```
+This is a competition prototype. The backend implements the API described above. The Flutter app is a UI prototype: its screens use sample data, the NFC tap and map navigation are simulated, and it does not yet call the backend. The passive transaction sweep into VitaPool is designed in the docs but not implemented.
 
-<br/>
+## Project context
 
----
+Built by **Team VITA-NUN** from Nile University, Abuja, for the **OPay | Google National Innovation Challenge 2026**, Healthcare Technology track. The concept note and build plan are in [`Docs/`](Docs/) and the repo root.
 
-## 📊 Why VITA Wins
+## Team
 
-| Existing Solution | What It Misses |
-|------------------|----------------|
-| Thrifto / WeSpare / CircleFunds | Not health-locked · no NFC · no emergency trigger · no bystander flow |
-| NHIS | Covers <5% of Nigerians · days for approval · hospitals routinely reject it |
-| OPay Savings | No community pool · no health lock · no NFC · no rural SMS channel |
-| M-TIBA (Kenya) | Kenya only · no NFC · no bystander coordination · no community governance |
-| Paper medical ID | Not linked to funds · no first aid · no coordination · useless offline |
+| Name | Role |
+|---|---|
+| Jitubohh | Backend, team lead (FastAPI, Gemini, VitaPool, emergency flow) |
+| Wali | Flutter web and mobile app |
 
-> *The specific combination of NFC physical identity + purpose-locked community emergency fund +*
-> *passive OPay sweep + Gemini SMS onboarding does not exist anywhere in West Africa.*
+## Author
 
-<br/>
-
----
-
-## 💰 Business Model
-
-| Stream | Mechanism | At Scale |
-|--------|-----------|----------|
-| VitaCard sales | ₦300–500/card at OPay agent points | ₦30M per 100k cards |
-| VitaPool fee | 2% of every emergency payout | Self-sustaining from Day 1 |
-| SMS triage | ₦4–6/SMS covered by pool sweep | Zero net cost to user |
-| Health analytics | Anonymised population data — Phase 2 | Secondary revenue |
-
-No government subsidy needed. No hospital integration required.
-Runs on OPay's existing rails and Nigeria's GSM network.
-
-<br/>
-
----
-
-## 👥 Team VITA-NUN
-
-| Role | Name | Owns |
-|------|------|------|
-| Backend · Team Lead | Jitubohh | Python FastAPI · Gemini · VitaPool · Emergency flow |
-| Flutter · Web + Mobile | Wali | One Flutter app — web dashboard + Android NFC |
-| Designer | TBA | Wireframes · Pitch deck · Canva concept note |
-| Research · Health | TBA | User research · Business model · Essay |
-| Wild Card | TBA | Video · Demo coordination · QA |
-
-<br/>
-
----
-
-<div align="center">
-
----
-
-*"VITA gives every Nigerian a health identity in their pocket and a community*
-*safety net in their wallet — activated by a tap, funded by their daily*
-*transactions, accessible to anyone with a feature phone."*
-
----
-
-**Team VITA-NUN · Nile University Abuja · OPay | Google National Innovation Challenge 2026**
-
-</div>
+**Medugu Wali**, Blue Particle Studios
+[github.com/WaliMedugu](https://github.com/WaliMedugu) · [linkedin.com/in/meduguwali](https://www.linkedin.com/in/meduguwali)
